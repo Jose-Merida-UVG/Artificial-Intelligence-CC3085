@@ -57,7 +57,9 @@ Inteligencia Artificial - CC3085}
           \end{equation}
 
           Dónde:
+
           \vspace{1em}
+
             \begin{itemize}
               \item \textbf{$O$}: Representa la \textit{ocupación actual} del carril
               \item \textbf{$O_{crit}$}: Es el \textit{punto crítico de saturación}
@@ -69,11 +71,66 @@ Inteligencia Artificial - CC3085}
           
             Adicionalmente, debemos tomar en cuenta que los parámetros de esta función costo siempre deben basarse en
             datos de la vida real. Por ejemplo, utilizar un $k$ alto o $O_{crit}$ bajo sería totalmente contraproducente
-            en una zona de alto tráfico ya que los deadlocks son inevitables. Adicionalmente, podemos explorar algunas
-            otras métricas auxiliares para tener una función de costo más robusta. Tomando también en cuenta las limitaciones
-            de esta métrica bajo tráfico extremadamente pesado.
+            en una zona de alto tráfico ya que los deadlocks son inevitables. Sin embargo, la mayor crítica es que esta
+            métrica no se podría utilizar por si sola. Podemos darnos cuenta que la manera más eficiente de minimizar
+            el costo es simplemente no dejar ingresar ningún vehículo al sistema. Si no tenemos ningún carro dentro de la
+            zona, el costo es 0 y el agente ha cumplido exitosamente su misión.
 
+          \item \textbf{Throughput:} Aquí buscamos darle una recompensa al modelo, de manera que no se encuentre en estado
+            de parálisis con la finalidad de evitar penalizaciones. Podemos iniciar con la métrica de número de carros 
+            cruzando, pero $normalizándola$ respecto al tiempo de luz verde. Definiendo esta métrica por medio de la
+            siguiente ecuación:
 
+            \begin{equation}
+              T = \frac{N}{t_{g}}
+            \end{equation}
+
+          Dónde:
+
+          \vspace{1em}
+
+            \begin{itemize}
+              \item \textbf{$T$}: Representa el \textit{throughput}
+              \item \textbf{$N$}: Representa la \textit{cantidad de carros que cruzaron en el intervalo de luz verde}
+              \item \textbf{$t_{g}$}: Representa la \textit{longitud del intervalo de luz verde}
+            \end{itemize}
+
+          \vspace{1em}
+
+          Adicionalmente, podríamos asignar pesos diferentes a áreas con mayor transito para evitar sesgos dentro del sistema.
+          Sin embargo, el \textit{fine tuning} de los parámetros queda fuera del alcance de esta hoja de trabajo. También
+          debemos tomar en cuenta que buscamos un balance entre ambas métricas descritas, evitando los estancamientos y
+          priorizando una cantidad alta de autos fluyendo. Esto nos lleva a la métrica final.
+
+        \item \textbf{Indice de Fluidez:} En esta métrica que nombramos Índice de Fluidez ($IDF$) buscamos 
+          tomar en cuenta el \textit{Throughput} y \textit{Ocupación de Carril} y para medir el desempeño de un sistema
+          de semáforos inteligentes. Tomando las ecuaciones (1) y (2), podemos construir la siguiente ecuación:
+
+          \begin{equation}
+            IDF = {w_{1}}T - {w_{2}}C(O)
+          \end{equation}
+
+          Dónde:
+
+          \vspace{1em}
+
+          \begin{itemize}
+            \item \textbf{$IDF$}: Representa el \textit{índice de fluidez} del sistema en una intersección específica.
+            \item \textbf{${w_{1}}$}: Representa el \textit{peso de Throughput} del sistema.
+            \item \textbf{$T$}: Representa el \textit{Throughput} del sistema en una intersección específica.
+            \item \textbf{${w_{2}}$}: Representa el \textit{peso de la Ocupación} del sistema.
+            \item \textbf{$C(O)$}: Representa la \textit{Ocupación} de las vías en una intersección específica.
+          \end{itemize}
+
+          \vspace{1em}
+
+          Esta métrica nos permite medir el desempeño en intersecciones específicas, al igual que a lo largo de toda
+          la red en una zona específica. En un mundo ideal, el agente es capaz de calcular esta métrica de rendimiento
+          y tomar las decisiones que la minimicen en tiempo real (o en cada ciclo). Sin embargo, también es importante
+          tomar en cuenta que cuenta con diferentes parámetros que deben ser escogidos por medio de decisiones informadas.
+          Antes de queres implementar un sistema, se debería de obtener información sobre el tráfico en Guatemala (más
+          específicamente, en la zona de implementación) y diferentes \textit{edge cases} para asegurarnos que el agente
+          tome decisiones beneficiosas para el tráfico.
 
         \end{itemize}
 
