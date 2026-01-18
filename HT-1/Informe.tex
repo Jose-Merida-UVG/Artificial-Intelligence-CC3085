@@ -40,6 +40,42 @@ Inteligencia Artificial - CC3085}
             principal.
         \end{itemize}
 
+        En resumen, las dos métricas inicialmente propuestas favorecen el volumen bruto e ignoran completamente la equidad
+        dentro del sistema. Esto nos lleva a buscar una métrica más justa para las calles con un mejor flujo de tráfico,
+        por lo cual debemos buscar \textit{normalizar} estas medidas de cierta manera. Dando como resultado:
+
+        \begin{itemize}
+        \item \textbf{Ocupación de carril:} En lugar de contar la cantidad de autos cruzando, buscamos medir que porcentaje
+          del tramo regulado por el semáforo se encuentra ocupado. Aquí logramos evitar el problema dónde tener 25 carros
+          en una pequeña via auxiliar es completamente diferente a tener 25 carros en un bulevar. Para implementar la métrica
+          dentro de nuestro modelo, debemos buscar un punto crítico (por ejemplo, 80\% o 90\%) basándonos en observaciones
+          de la vida real para determinar cuando se forma un \textit{gridlock}. Buscando penalizar de manera exponencial
+          los estancamientos, podemos proponer la siguiente ecuación:
+
+          \begin{equation}
+            C(O) = \frac{1}{(O_{crit} - O)^k}
+          \end{equation}
+
+          Dónde:
+          \vspace{1em}
+            \begin{itemize}
+              \item \textbf{$O$}: Representa la \textit{ocupación actual} del carril
+              \item \textbf{$O_{crit}$}: Es el \textit{punto crítico de saturación}
+              \item \textbf{$k$}: Actúa como un \textit{parámetro de sensibilidad}
+              \item \textbf{$C(O)$}: Es la \textit{función de costo} resultante.
+            \end{itemize}
+
+          \vspace{1em}
+          
+            Adicionalmente, debemos tomar en cuenta que los parámetros de esta función costo siempre deben basarse en
+            datos de la vida real. Por ejemplo, utilizar un $k$ alto o $O_{crit}$ bajo sería totalmente contraproducente
+            en una zona de alto tráfico ya que los deadlocks son inevitables. Adicionalmente, podemos explorar algunas
+            otras métricas auxiliares para tener una función de costo más robusta. Tomando también en cuenta las limitaciones
+            de esta métrica bajo tráfico extremadamente pesado.
+
+
+
+        \end{itemize}
 
       \item \textbf{Métrica B (Seguridad peatonal):} [cite: 17]
     \end{itemize}
