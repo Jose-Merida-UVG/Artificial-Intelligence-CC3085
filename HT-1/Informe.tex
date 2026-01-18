@@ -1,12 +1,13 @@
 \documentclass[11pt]{article}
 \usepackage[spanish]{babel}
-\usepackage[margin=1.2in]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage{amsmath, amssymb, amsfonts}
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
 
-\title{\textbf{Hoja de Trabajo 1: Agentes y Entornos}}
+\title{\textbf{Hoja de Trabajo 1: Agentes y Entornos} \vspace{1em}\\
+Inteligencia Artificial - CC3085}
 \author{José Antonio Mérida Castejón}
 \date{\today}
 
@@ -23,7 +24,23 @@
   \item \textit{Propongan dos (2) métricas de desempeño distintas para este agente:}
 
     \begin{itemize}
-      \item \textbf{Métrica A (Flujo vehicular):} [cite: 16]
+      \item \textbf{Métrica A (Flujo vehicular):} Podemos empezar con dos opciones bastante \textit{naive}, tales como:
+        \begin{itemize}
+          \item \textbf{Velocidad promedio de carros cruzando:} Aquí seguimos una linea lógica dónde mientras más tráfico
+            hay en la ciudad, menor es la velocidad de los carros. Sin embargo, encontramos algunos problemas cuando nos
+            ponemos a pensar sobre la prioridad de las vías principales. Si el agente busca maximizar la velocidad promedio,
+            únicamente deben de no frenar (o desacelerar) los carros en las vías principales para aumentar la métrica. Esto
+            mientras los carros en vías auxiliares no tienen prioridad alguna, ya que si se formó alguna cola estos carros
+            irán despacio y no maximizan la métrica.
+
+          \item \textbf{Cantidad de carros cruzando:} Aquí seguimos una linea de pensamiento bastante lógica, similar al
+            inciso anterior. Mientras más carros cruzan intersecciones, significa que tenemos menos tráfico (o un mayor
+            flujo vehicular). El problema con esta métrica también es parecido, el modelo no tiene incentiva alguna para
+            otorgar paso a una calle auxiliar con $n$ carros estancados si tenemos $2n$ carros transitando por una vía
+            principal.
+        \end{itemize}
+
+
       \item \textbf{Métrica B (Seguridad peatonal):} [cite: 17]
     \end{itemize}
 
