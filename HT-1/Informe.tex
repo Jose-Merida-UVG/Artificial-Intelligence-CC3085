@@ -252,13 +252,31 @@ Inteligencia Artificial - CC3085}
   \item \textit{Describa un escenario específico dónde en agente actuaría de manera ``racional`` bajo la métrica
     A, pero esta acción sería considerada un desastre bajo la Métrica B.}
 
-    \begin{itemize}
-      \item Texto de pruebna
-    \end {itemize}
+    A pesar de haber iterado y analizado extensivamente las métricas, considero que el sistema debe de ser probado
+    exhaustivamente para poder llegar a un \textit{punto de equilibro} dónde no le de prioridad a una única métrica
+    sobre la otra. Ya que en la mayoría de los casos, un desbalance entre peatones y vehículos puede resultar en
+    desastres absolutos.  
+
+    Por ejemplo: Bajo la métrica $A$, se llega a un punto crítico $O_{crit}$ de atascamiento que aumenta exponencialmente.
+    Siendo un día lluvioso, fin de semana y quincena en una intersección con una vía principal sumamente
+    transcurrida cercana a $O_{crit}$. La acción más racional del agente, es intentar minimizar la penalización dada por
+    $C(O)$ y dar paso a la mayor cantidad de carros posible por esta vía principal y maximizar si Índice de Fluidez ($IDF$).
+    Esto también aumentaría el factor $Throughput$ ($T$), creando una situación dónde el comportamiento obvio es quitarle
+    prioridad a los peatones. Mientras tanto, los peatones se encuentran esperando con un \textit{Factor de Espera} ($E(t_{w}$))
+    crítico, aumentando exponencialmente mientras el tiempo sigue transcurriendo. Adicionalmente, digamos que el agente decide
+    por fin que los tiempos de espera peatonales han sido suficientes. Se ha dado paso peatonal, pero mientras los peatones
+    están cruzando la calle, la vía principal se atascó nuevamente y se ha llegado a $O_{crit}$. Aquí se puede llegar a
+    cortar la vía peatonal, generando aún otra penalización, esta vez del \textit{Factor de Suficiencia} ($S$). En este caso,
+    se tomó la acción óptima en cuanto a la métrica $A$, pero la métrica $B$ se vio penalizada fuertemente tomando en cuenta
+    ambos factores.
+
 
   \item \textit{Basándose en la diapositiva de Incertidumbre, explique por qué este entorno de tráfico nunca podría
-    ser Completamente Observale y cómo la "Limitante en sensores" afecta la racionalidad de su agente}
+    ser Completamente Observable y cómo la ``Limitante en sensores`` afecta la racionalidad de su agente}
 
+
+    El entorno del tráfico en Guatemala siempre será \textit{Parcialmente Observable}, ya que un agente jamás tendrá acceso
+    total a un estado global del sistema en tiempo real. 
 \end{enumerate}
 
 \section*{Task 2: PEAS y Entornos}
