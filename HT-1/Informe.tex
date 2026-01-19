@@ -350,21 +350,46 @@ reportes del clima. En base a esto, responda lo siguiente:}
 
 
     \end{enumerate}
-    
-  \item[E (Environment/Entorno): \textnormal{\textit{(¿Qué rodea al agente y con qué interactúa?)}}] 
+   
+  \vspace{1em}
+  \item[E (Environment/Entorno): \textnormal{\textit{(¿Qué rodea al agente y con qué interactúa?)}}] ~
 
-  \item[A (Actuators/Actuadores): \textnormal{\textit{(Mecanismos para afectar el entorno)}}] 
+  El agente opera dentro de de una granja solar en el desierto de Zacapa. Físicamente, lo rodean: 
+    \begin{itemize}
+      \item \textbf{Infraestructura:} Arreglos de páneles solares, posiblemente arreglados dentro de un grid.
+      \item \textbf{Factores Climáticos:} Condiciones climáticas extremas, como calor intenso o radiación UV.
+      \item \textbf{Obstáculos Físicos:} Posiblemente arena o piedras pequeñas dentro de los rieles.
+      \item \textbf{Entorno Digital:} Una conexión a la red la consulta de APIs meteorológicas.
+      \item \textbf{Suciedad y Daños:} Presencia de polvo / tierra en los páneles solares, al igual que daños físicos
+        que no necesariamente se deben reparar.
+    \end{itemize}
 
-  \item[S (Sensors/Sensores): \textnormal{\textit{(Entradas de percepción). Asumiendo que no hace ningún
-        preprocesamiento, ¿qué métrica usaría para medir el desempeño de su modelo?}}] 
+    Mientras que principalmente interactúa con los páneles y suciedad en si, también es importante tomar en cuenta que la
+    \textit{percepción} del robot cubre cualquier información que recaude por medio de sensores o esté presente en el
+    ambiente.
+
+    \vspace{1em}
+
+\item[A (Actuators/Actuadores): \textnormal{\textit{(Mecanismos para afectar el entorno)}}] ~
+    \begin{itemize}
+        \item \textbf{Motores de Movimiento:} Permiten el desplazamiento del robot sobre el sistema de rieles.
+        \item \textbf{Motores / Controles del Brazo:} Controlan el brazo robótico, al igual que sus movimientos
+          sobre la superficie del panel.
+        \item \textbf{Bomba de Agua:} Se encargan de la dosificación y esparsión de agua.
+    \end{itemize}
+
+    \vspace{1em}
+
 \end{description}
 
   \item \textit{Clasifique el entorno de este robot según las 4 dimensiones vistas en clase. Debe
     justificar cada elección (una elección sin justificación tiene valor de 0pts).}
         
     \begin{enumerate}[(a)]
-      \item \textit{¿Completamente o Parcialmente observable?}
-        \textbf{Respuesta.} Justificacion
+  \item \textit{¿Completamente o Parcialmente observable?} \\
+        \textbf{Parcialmente Observable.} La percepción del entorno se ve limitada por la posición de robot, al igual que
+        la dirección a la que está apuntado la cámara. No se cuenta con manera alguna de conocer el estado del panel solar
+        30m hacia la izquierda, por lo tanto el estado global no es accesible.
       
 
       \item \textit{¿Determinístico o Estocástico?}
