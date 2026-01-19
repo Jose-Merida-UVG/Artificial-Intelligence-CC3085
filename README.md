@@ -12,4 +12,4 @@ contents below. Inside of these subfolder you'll find detailed `README.md` files
 
 | Assignment | Topic                 | Link                  | Description                              |
 | :--------- | :-------------------- | :-------------------- | :--------------------------------------- |
-| **HT-1**   | Agents & Environments | 📂 [View HT-1 Folder] | PEAS Analysis & Custom Metric Definition |
+| **HT-1**   | Agents & Environments | 📂 [View Folder](./HT-1/) | PEAS analysis for a solar cleaning robot, metric design for a traffic system in Guatemala City, and a simple reflex agent implementation. |
