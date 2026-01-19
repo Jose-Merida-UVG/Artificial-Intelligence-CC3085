@@ -134,15 +134,130 @@ Inteligencia Artificial - CC3085}
 
         \end{itemize}
 
-      \item \textbf{Métrica B (Seguridad peatonal):} [cite: 17]
-    \end{itemize}
+      \item \textbf{Métrica B (Seguridad peatonal):} Similar al inciso anterior, primero vamos a indagar sobre algunas
+        métricas \textit{naive} e ir iterando para obtener una métrica más adecuada.
 
-  \item \textit{Describa un escenario específico dónde en agente actuaría de manera "racional" bajo la métrica
+        \begin{itemize}
+          \item \textbf{Conteo de Colisiones:} Esta primera idea parece ser un buen acercamiento, sin embargo podemos darnos
+            cuenta rápidamente que no es apta para un sistema como este. Realmente, esta es una métrica reactiva y un agente
+            necesita que ocurra un accidente para recibir una penalización. Adicionalmente, estos eventos deberían ser pocos
+            y las condiciones que los dan pueden no ser consistentes como para que el agente realmente \textit{aprenda}.
+
+          \item \textbf{Tiempo de Respuesta Botón Peatonal:} Dentro del sistema de tráfico, podemos asumir que una persona
+            es más propensa a realizar alguna acción peligrosa (por ejemplo, cruzar la calle sin tener el paso) mientras
+            más tiempo pasa esperando. Esto implica que un botón de paso peatonal con un tiempo de respuesta menor resulta
+            en una mayor seguridad peatonal. El problema más evidente aquí, es que es completamente incompatible el manejo
+            de fluidez vehicular con un botón peatonal \textit{óptimo} que otorgue paso cuando sea posible. Adicionalmente,
+            el cambio constante de estados de luz verde / roja puede generar inseguridad para tanto peatones cómo vehículos.
+
+        \end{itemize}
+
+        Adicionalmente, también debemos de tomar en cuenta que un sistema de inteligencia artificial por defecto no toma
+        decisiones similares a las de un ser humano. Es decir, todo lo que \textit{sabe} se le debe enseñar. Esto incluye
+        razonamientos triviales, cómo lo puede ser \textit{``No coloquemos el semáforo en verde si acabamos de colocarlo
+        en rojo para el cruce de este peatón``}. Esto nos lleva a definir las siguientes dos métricas auxiliares:
+
+        \begin{itemize}
+          \item \textbf{Factor de Suficiencia:} Esta métrica mide si el tiempo de verde es físicamente suficiente para que
+            un grupo de peatones termine de cruzar. Aquí la métrica es bastante simple, dónde podemos definir la métrica
+            por medio de la siguiente ecuación:
+
+          \begin{equation}
+            S = {t_{verde}} - {t_{despeje}}
+          \end{equation}
+
+          Dónde
+
+          \vspace{1em}
+
+          \begin{itemize}
+            \item \textbf{$S$}: Es el \textit{factor de suficiencia}
+            \item \textbf{$t_{verde}$}: Es el \textit{tiempo que la luz peatonal estuvo en verde}
+            \item \textbf{$t_{despeje}$}: Es el \textit{tiempo para que se despejara la calle}
+          \end{itemize}
+
+          \vspace{1em}
+
+          Aquí se podría argumentar que lo mejor sería un sistema dónde no se permitiera el cambio mientras un peatón este
+          cruzando, sin embargo una persona a media calle podría provocar un estancamiento total del tráfico al siempre
+          tener el paso.
+
+
+          \item \textbf{Factor de Espera Crítica:} De manera análoga a la métrica de \textit{Ocupación de carril}, aquí vamos
+          a modelar el \textit{Factor de Desesperación} como una función que crece exponencialmente conforme el tiempo de espera
+          se acerca a un punto crítico de paciencia del peatón. Definimos la ecuación de la siguiente manera:
+
+          \begin{equation}
+            E(t_w) = \frac{1}{(t_{crit} - t_w)^k}
+          \end{equation}
+
+          Dónde:
+
+          \vspace{1em}
+
+          \begin{itemize}
+            \item \textbf{$t_w$}: Representa el \textit{tiempo de espera actual} del peatón (desde el accionamiento del botón).
+            \item \textbf{$t_{crit}$}: Es el \textit{tiempo crítico de paciencia}, donde el peatón decide cruzar ilegalmente.
+            \item \textbf{$k$}: Actúa como un \textit{parámetro de sensibilidad} al tiempo.
+            \item \textbf{$E(t_w)$}: Es la \textit{función de costo por desesperación} resultante.
+          \end{itemize}
+
+          \vspace{1em}
+
+          Aquí debemos de ser cuidadosos al elegir los parámetros, ya que deberían de reflejar la vida real de la manera
+          más cercana posible. De hecho, antes de implementar esta función la primera recomendación sería verificar los
+          supuestos sobre los cuales trabaja el modelo con información del mundo real. Por último, tenemos una métrica
+          que busca combinar los factores anteriores.
+
+        \item \textbf{Índica de Seguridad Peatonal:} El \textit{Índice de Seguridad Peatonal} o $ISP$, busca minimizar los
+          tiempos de espera peatonales al igual que asegurar tiempos correctos de despeje de vía. Esta métrica penaliza
+          al modelo si el tiempo de verde otorgado es suficiente para que los peatones completen el cruce, y busca penalizar
+          tiempos de espera cercanos al punto crítico que incentiva al peatón a cruzar sin paso. Tomando las ecuaciones (4)
+          y (5), lo modelamos por medio de la siguiente ecuación:
+
+        \begin{equation}
+            ISP = w_{3}S - w_{4}E(t_w)
+        \end{equation}
+
+          Dónde:
+
+        \vspace{1em}
+
+        \begin{itemize}
+          \item \textbf{$ISP$}: Representa el \textit{índice de seguridad peatonal} en el cruce.
+          \item \textbf{$w_3$}: Es el peso asignado al \textit{Factor de Suficiencia}.
+          \item \textbf{$S$}: Representa la \textit{Suficiencia de Despeje} ($t_{verde} - t_{despeje}$).
+          \item \textbf{$w_4$}: Es el peso asignado al \textit{Factor de Espera Crítica}.
+          \item \textbf{$E(t_w)$}: Es la función de costo por \textit{Desesperación} definida anteriormente.
+        \end{itemize}
+
+      \vspace{1em}
+
+
+    \end{itemize}
+  \end{itemize}
+  Como reflexión o conclusión de este inciso, implementar un sistema inteligente de control de tráfico en Guatemala sería
+  un proyecto de complejidad alta. Algo básico como definir métricas de desempeño puede volverse complicado, teniendo que tomar
+  en cuenta diferentes factores como:
+
+    \begin{itemize}
+      \item Situaciones de tráfico específicas a la zona.
+      \item Comportamiento de las métricas en \textit{edge cases}.
+      \item Viabilidad de implementación de sensores.
+      \item Balance en priorización de diferentes factores, cómo seguridad peatonal y flujo vehicular.
+    \end{itemize} 
+
+  Adicionalmente, los supuestos detallados en cada métrica propuesta definitivamente deben ser validados.
+
+  \item \textit{Describa un escenario específico dónde en agente actuaría de manera ``racional`` bajo la métrica
     A, pero esta acción sería considerada un desastre bajo la Métrica B.}
 
     \begin{itemize}
       \item Texto de pruebna
     \end {itemize}
+
+  \item \textit{Basándose en la diapositiva de Incertidumbre, explique por qué este entorno de tráfico nunca podría
+    ser Completamente Observale y cómo la "Limitante en sensores" afecta la racionalidad de su agente}
 
 \end{enumerate}
 
