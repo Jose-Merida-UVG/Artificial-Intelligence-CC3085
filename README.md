@@ -1,5 +1,15 @@
-# Artifial Intelligence Course @ UVG
+# Artificial Intelligence – CC3085 @ UVG
 
-This repository holds all assignments for the Artificial Intelligence course at UVG, each subfolder is a
-specific assignment. The written reports are done in LaTeX as it's a technology I'm getting more familiarized
-with :)
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
+![LaTeX](https://img.shields.io/badge/LaTeX-Reports-008080)
+
+## 📖 About This Repository
+
+This repository hosts the academic assignments and projects for the Artificial Intelligence (CC3085) course at Universidad del Valle de Guatemala. Each subfolder corresponds to a different assignment, detailed in the table of
+contents below. Inside of these subfolder you'll find detailed `README.md` files with assignment information, with written reports / project specific documentation written in LaTeX.
+
+## 📂 Structure
+
+| Assignment | Topic                 | Link                  | Description                              |
+| :--------- | :-------------------- | :-------------------- | :--------------------------------------- |
+| **HT-1**   | Agents & Environments | 📂 [View HT-1 Folder] | PEAS Analysis & Custom Metric Definition |
