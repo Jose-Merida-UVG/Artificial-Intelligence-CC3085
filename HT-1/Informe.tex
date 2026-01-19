@@ -381,6 +381,36 @@ reportes del clima. En base a esto, responda lo siguiente:}
 
     \vspace{1em}
 
+
+
+  \item[S (Sensors/Sensores): \textnormal{\textit{Asumiendo que no hace ningún preprocesamiento, ¿qué métrica usaría
+    para medir el desempeño de su modelo?}}] ~
+
+      Realmente, realizar mediciones sin algún tipo de preprocesamiento se me hace algo bastante difícil. Algunas de mis ideas iniciales
+      principalmente se basan en modelos que ya cuentan con cierto entrenamiento, o tienen capacidades básicas. Si no contamos con preprocesamiento,
+      voy a asumir que estamos entrenando a un modelo súmamente básico bajo la condición que su \textit{task} es dejar un panel lo más limpio
+      posible.
+
+      El \textit{approach} inicial podría ser comparar la imagen con la de un panel limpio, sin embargo los ángulos o iluminación diferente
+      hacen que esta métrica no sea muy exitosa. Otra idea también podría ser calcular el promedio de intensidad de los píxeles (si es
+      más oscuro, está más sucio), pero esto fallaría si encontramos sombras de nubes por ejemplo.
+
+      Tomando en cuenta que los páneles solares tienen un \textit{grids} bastante definidos (y pequeños) en su diseño, podemos calcular
+      la diferencia de intensidad entre píxeles adyacentes. Esto nos ayuda a definir si el panel está limpio, y por ende si em modelo
+      ha tenido un buen desempeño en su tarea de limpiar un único panel solar.
+
+      \begin{itemize}
+        \item \textbf{Panel Limpio:} Aquí tenemos bordes bastante definidos entre los grids, lo que hace que los cambios de intensidad
+          entre píxeles adyacentes sean más bruscos.
+
+        \item \textbf{Panel Sucio:} El polvo y otros sedimentos suavizan las transiciones, esto hace que los píxeles vecinos se parezcan
+          más entre si. Resultando en una medida más baja.
+      \end{itemize}
+
+      En conclusión, el no realizar preprocesamiento de datos es una limitante bastante significativa. Sin embargo, utilizando los cambios
+      de intensidad in píxeles adyacentes podemos obtener una métrica para estimar el desempeño del modelo.
+    \vspace{1em}
+
 \end{description}
 
   \item \textit{Clasifique el entorno de este robot según las 4 dimensiones vistas en clase. Debe
