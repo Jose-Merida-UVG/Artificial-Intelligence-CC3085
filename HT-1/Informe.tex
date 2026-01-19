@@ -276,7 +276,44 @@ Inteligencia Artificial - CC3085}
 
 
     El entorno del tráfico en Guatemala siempre será \textit{Parcialmente Observable}, ya que un agente jamás tendrá acceso
-    total a un estado global del sistema en tiempo real. 
+    total a un estado global del sistema en tiempo real. En el caso de este modelo, buscamos tener acceso a la mayor cantidad
+    de información posible pero siempre nos veremos limitados. Por ejemplo, podemos identificar los siguientes sensores y
+    sus limitantes:
+
+    \begin{itemize}
+      \item Modelos de Visión por Computadora: Si un peatón o moto es tapado por un vehículo pesado, somos incapaces
+        de percibir el estado del sistema.
+
+      \item Sensores de Ocupación: Los sensores están físicamente limitados a su posición, la ocupación de carril por 
+        ejemplo, jamás podrá ser medida en un intervalo contínuo de manera perfecta.
+    \end{itemize}
+
+    Tomando también en cuenta, que tenemos algunos otros tipos de sensores que simplemente no serían viables en esta situación.
+    Por ejemplo, si tomáramos modelos más pesados o complejos como de mapeo 3D del entorno, el procesamiento de estos datos
+    tendría un costo computacional demasiado alto para el modelo.
+
+    Esta limitante en los sensores básicamente redefine la racionalidad del agente. Este no es juzgado en función del éxito
+    absoluto (o verdadero) en el mundo real, si no en función de las percepciones disponibles. Gracias a estas limitaciones, el 
+    agente opera bajo una racionalidad limitada. Dónde, por ejemplo, si sus sensores no logran detectar a un peatón cruzando la
+    calle, este peatón realmente jamás existió y no pudo existir alguna decisión o penalización asociada. El modelo sigue
+    tomando decisiones óptimas y racionales, pero al hacerlo sobre datos incompletos no paran reflejando la decisión óptima
+    real. 
+
+    Por último, este entorno jamás puede ser \textit{Completamente Observable} aún descartando las limitantes de sensores. En un
+    caso hipotético dónde tengamos cada milímetro cubierto con un mapeo 3D en tiempo real, ¿que sucede al momento que dos carros
+    colisionan?
+
+    Aquí tenemos un ambiente adverso, dónde el sistema jamás puede conocer con certeza el estado siguiente del ambiente. Aquí
+    podemos generar aún más preguntas, aunque el sistema logre reconocer un choque jamás podrá saber si:
+
+  \begin{itemize}
+    \item Un conductor se bajará e iniciará un altercado físico con el otro
+    \item Los conductores en todos los carriles adyacentes se bajarán a ayudar (o tomar fotos)
+    \item Una ambulancia venía justo atrás de ellos y se han parado a ayudar, o en otro caso la misma ambulancia decide no
+      tomar acción alguna
+  \end{itemize}
+
+
 \end{enumerate}
 
 \section*{Task 2: PEAS y Entornos}
