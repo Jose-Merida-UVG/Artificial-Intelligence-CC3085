@@ -299,21 +299,6 @@ Inteligencia Artificial - CC3085}
     tomando decisiones óptimas y racionales, pero al hacerlo sobre datos incompletos no paran reflejando la decisión óptima
     real. 
 
-    Por último, este entorno jamás puede ser \textit{Completamente Observable} aún descartando las limitantes de sensores. En un
-    caso hipotético dónde tengamos cada milímetro cubierto con un mapeo 3D en tiempo real, ¿que sucede al momento que dos carros
-    colisionan?
-
-    Aquí tenemos un ambiente adverso, dónde el sistema jamás puede conocer con certeza el estado siguiente del ambiente. Aquí
-    podemos generar aún más preguntas, aunque el sistema logre reconocer un choque jamás podrá saber si:
-
-  \begin{itemize}
-    \item Un conductor se bajará e iniciará un altercado físico con el otro
-    \item Los conductores en todos los carriles adyacentes se bajarán a ayudar (o tomar fotos)
-    \item Una ambulancia venía justo atrás de ellos y se han parado a ayudar, o en otro caso la misma ambulancia decide no
-      tomar acción alguna
-  \end{itemize}
-
-
 \end{enumerate}
 
 \section*{Task 2: PEAS y Entornos}
@@ -328,7 +313,43 @@ reportes del clima. En base a esto, responda lo siguiente:}
   \item \textit{Complete la siguiente descripción del agente:}
 
 \begin{description}[style=nextline, leftmargin=0pt, font=\bfseries]
-  \item[P (Performance/Desempeño): \textnormal{\textit{(Mencione al menos 3 indicadores cuantificables)}}] 
+  \item[P (Performance/Desempeño): \textnormal{\textit{(Mencione al menos 3 indicadores cuantificables)}}] ~
+
+    \begin{enumerate}
+
+      \item \textbf{Calidad / Eficiencia de Limpieza:} Esta métrica busca medir que tan bien realiza la limpieza de
+        cada panel individual el agente. Aquí prácticamente contamos con dos opciones para realizar las mediciones. Primero,
+      podemos utilizar la cámara para identificar el \% de área con suciedad y ver cuanto se logró remover. O segundo, podemos
+      comparar la cantidad de energía generada por el panel antes y después de la limpieza. Personalmente, me gusta más la
+      segunda opción ya que movemos la capa de abstracción un poco más arriba, dónde permitimos que el agente tome decisiones
+      sobre las capas que nos interesan un poco menos (\textit{optimicidad de limpieza}) y se enfoque en la generación energética
+      real. Cómo formula de medición, podemos tomar la diferencia en producción de energía:
+
+      \[ \Delta P = P_{post} - P_{pre}\]
+
+      \item \textbf{Tiempo de Limpieza:} Esta métrica busca medir la eficiencia en cuánto a tiempo de
+        limpieza por panel individual. Se puede medir de dos maneras, primero el tiempo promedio de limpieza en cada panel
+        dentro de un periodo de tiempo. O segundo, la cantidad de páneles limpiados dentro de cierto periodo de tiempo. La
+        diferencia yace en que en uno se está tomando en cuenta el periodo de desplazamiento, mientras que en otro no. Por lo cual,
+        decidiría ir por la primera en caso que tuviera que implementar el sistema:
+
+        \[ \bar{t} = \frac{1}{n} \sum_{i=1}^{n} (t_{final, i} - t_{start, i}) \]
+
+      \item \textbf{Consumo de Agua:} Esta métrica busca optimizar el uso de agua parte del robot. Esta métrica
+        es especialmente clave, considerando que nos encontramos en el desierto de Zacapa y el agua puede ser un recurso
+        relativamente escaso. Buscamos optimizar el recurso utilizado por panel para no penalizar al robot por limpiar más
+        páneles.
+
+        \[ \bar{v} = \frac{V_{total}}{n} \]
+
+
+      \item \textbf{Numero de Paneles:} Esta métrica busca aumentar (o por lo menos, generar una incentiva) la cantidad
+        de paneles limpiados por el robot en un determinado periodo de tiempo. Si nos regimos únicamente por las métricas anteriores,
+        el robot ideal realiza una limpieza súmamente eficiente y deja de operar. Ya que se continua realizando operaciones, puede que
+        las métricas bajen.
+
+
+    \end{enumerate}
     
   \item[E (Environment/Entorno): \textnormal{\textit{(¿Qué rodea al agente y con qué interactúa?)}}] 
 
