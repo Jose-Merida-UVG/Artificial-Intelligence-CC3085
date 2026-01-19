@@ -326,7 +326,7 @@ reportes del clima. En base a esto, responda lo siguiente:}
       sobre las capas que nos interesan un poco menos (\textit{optimicidad de limpieza}) y se enfoque en la generación energética
       real. Cómo formula de medición, podemos tomar la diferencia en producción de energía:
 
-      \[ \Delta P = P_{post} - P_{pre}\]
+        \[ \Delta P = P_{post} - P_{pre}\]
 
       \item \textbf{Tiempo de Limpieza:} Esta métrica busca medir la eficiencia en cuánto a tiempo de
         limpieza por panel individual. Se puede medir de dos maneras, primero el tiempo promedio de limpieza en cada panel
@@ -388,25 +388,33 @@ reportes del clima. En base a esto, responda lo siguiente:}
         
     \begin{enumerate}[(a)]
   \item \textit{¿Completamente o Parcialmente observable?} \\
+
         \textbf{Parcialmente Observable.} La percepción del entorno se ve limitada por la posición de robot, al igual que
         la dirección a la que está apuntado la cámara. No se cuenta con manera alguna de conocer el estado del panel solar
         30m hacia la izquierda, por lo tanto el estado global no es accesible.
-      
+
+        \vspace{1em}
 
       \item \textit{¿Determinístico o Estocástico?} \\
+
         \textbf{Estocástico.} El estado siguiente del entorno no se determina únicamente por las acciones del robot, al operar
         en un ambiente abierto existen variables fuera del control del agente. Si fuera determinista, podríamos saber el estado
         en el que se encontrarán los páneles solares durante los siguientes 6 meses basados en las acciones que toma el robot. Claramente,
         esto no es posible dados factores como clima, fallas mecánicas en el entorno, etc.
 
+        \vspace{1em}
 
   \item \textit{¿Discreto o Continuo?} \\
+
     \textbf{Continuo.} El sistema no cuenta con un conjunto finito de representaciones. De hecho, hasta el estado de un único panel
     solar tomando en cuenta suciedad y daños sigue sin tener un conjunto finito de representaciones. Agregando las diferentes
     variables que encontramos en el entorno, también se deben de tomar en cuenta obstáculos o factores climáticos que evidentemente
     tampoco tienen un conjunto finito de representaciones. Por lo tanto, en entorno es continuo.
 
+    \vspace{1em}
+
 \item \textit{¿Benigno o Adverso?} \\
+
   \textbf{Benigno.} En este caso, no tenemos un oponente o agente competidor que esté buscando \textit{jugar en nuestra contra}. A pesar
   de estar en un ambiente hostil, tenemos factores físicos naturales y no \textit{planes} de un enemigo. Dado que el ambiente no
   está buscando minimizar nuestra métrica de desempeño, el entorno se clasifica como benigno.
@@ -418,29 +426,41 @@ reportes del clima. En base a esto, responda lo siguiente:}
 \begin{enumerate}
 
 \item \textit{Describa abstractamente cómo representaría el estado de un panel solar en una estructura de datos} \\
+
   \textbf{Una matriz.} Podemos tomar el panel solar, y dividirlo dentro de diferentes celdas de un grid. Dónde cada celda
-del grid tiene una densidad de suciedad que debe ser removida, en un intervalo de $\left[0,1\right]$ dónde 0 es perfectamente
-limpio y 1 totalmente sucio. Esta estructura es ideal, ya que mapea la superficie física a una tabla de datos
-que el robot puede procesar por coordenadas.
+  del grid tiene una densidad de suciedad que debe ser removida, en un intervalo de $\left[0,1\right]$ dónde 0 es perfectamente
+  limpio y 1 totalmente sucio. Esta estructura es ideal, ya que mapea la superficie física a una tabla de datos
+  que el robot puede procesar por coordenadas.
+
+  \vspace{1em}
 
 \item \textit{Si el robot tiene un modelo del panel, ¿qué significa ``inferir`` la siguiente acción? Relacionarlo con: $f(estado) \to accion$} \\
+
   Inferir es el cálculo u operación que realiza el robot para transformar la información percibida (entrada) a una decisión concreta.
 
   En la función $f(s) = a$, el término ``inferir`` se refiere a la evaluación lógica dónde:
-\begin{itemize}
-\item \textbf{Input ($s$):} Es el estado actual representado por la matriz de suciedad.
-\item \textbf{Función ($f$):} Es el modelo o "lógica" que el robot ya tiene cargada.
-\item \textbf{Output ($a$):} Es la acción resultante 
-\end{itemize}
-En términos simples, inferir es pasar del ``qué está pasando`` al ``qué voy a hacer`` mediante el resultado de esa función.
+
+  \vspace{1em}
+  \begin{itemize}
+    \item \textbf{Input ($s$):} Es el estado actual representado por la matriz de suciedad.
+    \item \textbf{Función ($f$):} Es el modelo o "lógica" que el robot ya tiene cargada.
+    \item \textbf{Output ($a$):} Es la acción resultante 
+  \end{itemize}
+  \vspace{1em}
+
+  En términos simples, inferir es pasar del ``qué está pasando`` al ``qué voy a hacer`` mediante el resultado de esa función.
+
+  \vspace{1em}
 
 \item \textit{¿Qué parámetro del modelo debería ajustarse si el robot nota que, tras limpiar un panel muy sucio con poca agua, el panel sigue sucio?} \\
+
     Se deben ajustar los parámetros del modelo que vinculan la densidad de suciedad con el volumen de agua necesario (como lo
     podrían ser los de control de bomba de agua). Tomando como ejemplo nuestras métricas de desempeño, podemos decir que se ha dado demasiada prioridad a una reducción en utilización de agua.
     En este caso, podríamos tomar otra de nuestras métricas (calidad de limpieza) y darle una prioridad más alta, asegurándonos
     que el bot logre ajustar los parámetros de flujo de agua correctamente. Otra manera más temporal de arreglarlo, podría
     ser cambiando las entradas para normalizar ligeramente más altos los niveles de la matriz a valores ligeramente más altos. De esta
-    manera estaríamos utilizando más agua al \textit{engañar} al bot y hacerlo pensar que hay más suciedad.
+    manera estaríamos utilizando más agua al \textit{engañar} al bot y hacerlo pensar que hay más suciedad. Sin embargo, esto último
+    debería de tomarse como último recurso.
 
 \end{enumerate}
 \section*{Task 4: Práctica - Agente Reflejo Simple}
