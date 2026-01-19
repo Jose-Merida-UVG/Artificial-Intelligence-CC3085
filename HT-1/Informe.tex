@@ -5,6 +5,7 @@
 \usepackage{booktabs}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
+\usepackage{hyperref}
 
 \title{\textbf{Hoja de Trabajo 1: Agentes y Entornos} \vspace{1em}\\
 Inteligencia Artificial - CC3085}
@@ -414,10 +415,37 @@ reportes del clima. En base a esto, responda lo siguiente:}
 
 \section*{Task 3: Modelado}
 
-Representación del estado: $f(\text{estado}) \rightarrow \text{acción}$[cite: 47].
+\begin{enumerate}
 
+\item \textit{Describa abstractamente cómo representaría el estado de un panel solar en una estructura de datos} \\
+  \textbf{Una matriz.} Podemos tomar el panel solar, y dividirlo dentro de diferentes celdas de un grid. Dónde cada celda
+del grid tiene una densidad de suciedad que debe ser removida, en un intervalo de $\left[0,1\right]$ dónde 0 es perfectamente
+limpio y 1 totalmente sucio. Esta estructura es ideal, ya que mapea la superficie física a una tabla de datos
+que el robot puede procesar por coordenadas.
+
+\item \textit{Si el robot tiene un modelo del panel, ¿qué significa ``inferir`` la siguiente acción? Relacionarlo con: $f(estado) \to accion$} \\
+  Inferir es el cálculo u operación que realiza el robot para transformar la información percibida (entrada) a una decisión concreta.
+
+  En la función $f(s) = a$, el término ``inferir`` se refiere a la evaluación lógica dónde:
+\begin{itemize}
+\item \textbf{Input ($s$):} Es el estado actual representado por la matriz de suciedad.
+\item \textbf{Función ($f$):} Es el modelo o "lógica" que el robot ya tiene cargada.
+\item \textbf{Output ($a$):} Es la acción resultante 
+\end{itemize}
+En términos simples, inferir es pasar del ``qué está pasando`` al ``qué voy a hacer`` mediante el resultado de esa función.
+
+\item \textit{¿Qué parámetro del modelo debería ajustarse si el robot nota que, tras limpiar un panel muy sucio con poca agua, el panel sigue sucio?} \\
+    Se deben ajustar los parámetros del modelo que vinculan la densidad de suciedad con el volumen de agua necesario (como lo
+    podrían ser los de control de bomba de agua). Tomando como ejemplo nuestras métricas de desempeño, podemos decir que se ha dado demasiada prioridad a una reducción en utilización de agua.
+    En este caso, podríamos tomar otra de nuestras métricas (calidad de limpieza) y darle una prioridad más alta, asegurándonos
+    que el bot logre ajustar los parámetros de flujo de agua correctamente. Otra manera más temporal de arreglarlo, podría
+    ser cambiando las entradas para normalizar ligeramente más altos los niveles de la matriz a valores ligeramente más altos. De esta
+    manera estaríamos utilizando más agua al \textit{engañar} al bot y hacerlo pensar que hay más suciedad.
+
+\end{enumerate}
 \section*{Task 4: Práctica - Agente Reflejo Simple}
 
-El código para las clases \texttt{Environment} y \texttt{Agent} se adjunta por separado[cite: 54, 60, 79].
+El código fue entregado dentro de Canvas como \texttt{main.py}, adicionalmente se encuentra disponible en este
+\href{https://github.com/Jose-Merida-UVG/Artificial-Intelligence-CC3085/tree/main/HT-1}{\underline{\textit{repositorio de GitHub}}}.
 
 \end{document}
