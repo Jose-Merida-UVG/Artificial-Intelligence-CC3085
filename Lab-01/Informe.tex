@@ -15,10 +15,32 @@ Inteligencia Artificial - CC3085}
 \begin{document}
 \maketitle
 
-\section*{Task 1: Análisis de Racionalidad y Métricas}
-  \begin{Enumerate}
+\section*{Task 1: El Dilema del Negocio}
+\textit{Imagine que usted ha sido contratado como Lead Data Scientist para tres startups diferentes. Para cada caso,
+responda las preguntas justificando su respuesta.}
+  \subsection*{Caso A: ``MediScan AI``}
+  \textit{Están desarrollando un modelo para detectar un tipo de cáncer raro en etapas tempranas a partir de radiografías.}
+    \begin{enumerate}
+      \item \textit{En este contexto, ¿qué es peor: un \textbf{Falso Positivo} o \textbf{Falso Negativo}?}
 
-  \end{Enumerate}
+        \vspace{0.5em}\\
+        En este caso, un \textbf{Falso Negativo} es significativamente más peligroso (o \textit{peor}). En el caso de un
+        \textbf{Falso Negativo}, el paciente abandona completamente la posibilidad de tener la enfermedad y se elimina cualquier
+        posibilidad de recibir tratamiento oportuno. Mientras que en un \textbf{Falso Positivo}, el paciente continúa con el monitoreo
+        y exámenes necesarios a pesar de no tener la enfermdad. Una opción genera gastos monetarios en exámenes (o tratamientos),
+        mientras que el otro resulta siendo potencialmente mortal.
 
+        En mi opinión, el modelo debería de tener un \textit{threshold} sumamente bajo para indicar una potencial presencia
+        de la enfermedad. La información proveída por el modelo podría servir como un tipo de \textit{screening} temprano, seguido
+        de un régimen establecido de exámenes para continuar con el monitoreo del paciente. En caso que la tecnología se vea limitada
+        las unicas opciones fueran \textit{tratamiento} o \textit{no tratamiento}, seguiría considerando peor un \textbf{Falso Negativo}
+        aunque se deberían de examinar los efectos secundarios o demás consecuencias del tratamiento.
+
+      \item \textit{Basado en lo anterior, si tuviera que optimizar el modelo priorizando una sola métrica entre
+        \textbf{Precisión (Precision)} y \textbf{Sensibilidad (Recall / Sensitivity)}, ¿cuál escogería y por qué?}
+
+      \item \textit{¿Por qué el Accuracy sería una métrica peligrosa para presentar a los inversionistas en este
+        caso específico?}
+    \end{enumerate}
 
 \end{document}
