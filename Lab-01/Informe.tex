@@ -80,7 +80,58 @@ responda las preguntas justificando su respuesta.}
 
         \item \textit{¿Qué métrica priorizaría aquí: \textbf{Precision} o \textbf{Recall}? (Defina cual es su clase positiva)}
 
+          Empezamos definiendo \textit{spam} como nuestra clase positiva. En este caso, definitivamente se debería priorizar
+          el \textbf{precision} en lugar de \textbf{recall}. Utilizando una analogía, digamos que tenemos una persona encargada
+          de revisar cada correo individualmente. Priorizando \textbf{precision}, esta persona clasificaría un correo como spam
+          si tuviera certeza que un correo pertenece a esta categoría. Si fuéramos en cambio por \textbf{recall}, esta persona
+          elegiría clasificar como spam a cualquier correo que tuviera índices de serlo.
       \end{enumerate}
 
+    \subsection*{Caso C: ``Zillow 2.0`` (Predicción de Precios de Casas)}
+    \textit{Están prediciendo el valor de mercado de propiedades. Tienen un modelo con las variables: Metros Cuadrados, Ubicación,
+    Número de Cuartos. Ahora, un junior engineer sugiere agregar 50 variables nuevas (como ``color de la puerta``, ``nombre del
+    dueño anterior``, etc.)} y nota que el \textbf{$R^2$} subió ligeramente.
 
+      \begin{enumerate}
+        \item \textit{¿Deberíamos confiar en este aumento del $R^2$ para decir que el modelo es mejor?}
+
+          \textbf{No.} Primero, al diseñar modelos debemos de tomar en cuenta la \textit{explicabilidad} y no únicamente el rendimiento.
+          Puede ser favorable tener un modelo con rendimiento similar pero con menos variables, así podemos identificar más fácilmente
+          \textit{por que} y \textit{como} funciona el modelo. Luego, la métrica de de $R^2$  sigue aumentando al agregar nuevas
+          variables independientes, sin importar cuán relacionadas estén con nuestra variable objetivo. De manera que, aunque prefiriésemos
+          un modelo con una cantidad de variables considerablemente mayor por un incremento pequeño de rendimiento, este incremento
+          es un derivado de las variables adicionales y no refleja adecuadamente la calidad del modelo. Por último, deberíamos
+          de tener bastante claro que algunas de estas variables muy probablemente solo estén agregando ruido al modelo. No necesitamos
+          ser expertos en el tema para darnos cuenta que probablemente no exista una correlación significativa entre el nombre del
+          dueño anterior y el valor de mercado de una propiedad. Esto también resalta la necesidad de un EDA, dónde las decisiones a
+          tomar al diseñar el modelo deben de estar bien fundamentadas.
+
+        \item \textit{¿Qué métrica debería observar para saber si esas nuevas variables aportan valor o son solo ruido? Justifíquese
+          basándose en la métrica de $R^2$ ajustado.}
+
+            La métrica a observar sería $R^2 \ ajustado$. Aquí se modifica la fórmula, agregando una penalización por agregar
+            variables nuevas. La fórmula modificada es la siguiente:
+
+              \[Adjusted \ R^2 = 1 - \frac{(1-R^2)(N-1)}_{N - p - 1}\]
+
+            Donde:
+
+            \begin{itemize}
+              \item \textbf{$R^2$}: es el $R^2$ de la muestra
+              \item \textbf{$N$}: es el tamaño de la muestra
+              \item \textbf{$p$}: es el número de variables independientes
+            \end{itemize}
+
+            Esto significa que, al agregar una variable el denominador {$N-p-1$} se vuelve más pequeño. Al dividir dentro de un valor
+            más pequeño, estamos volviendo la cifra del lado derecho más grande y esto resulta en un $R^2 \ ajustado$ más pequeño. Esto
+            resulta en que las variables adicionales puedan \textit{disminuir} el rendimiento del modelo si no proveen valor, mientras
+            que utilizando $R^2$ únicamente pueden mantenerlo igual o aumentarlo. Esto quiere decir que para tener un $R^2 \ ajustado$
+            más alto, cada variable independiente debe proveer un valor más alto que la penalización dada por el ajuste.
+
+            Adicionalmente, para el entrenamiento del modelo podemos tomar en cuenta diferentes técnicas de regularización como
+            \textit{Lasso (L1)} o \textit{Ridge (L2)}. En este caso, personalmente optaría por \textit{Lasso} para ayudar a eliminar
+            algunas de las variables nuevas del junior engineer (al ser la regularización más \textit{agresiva}) y darle algo de
+            validez a su sugerencia de implementar nuevas variables. De esta manera podemos explorar brevemente algunas sugerencias,
+            manteniendo clara la visión de optimizar en cuanto a la métrica $R^2 \ ajustado$.
+      \end{enumerate}
 \end{document}
