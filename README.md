@@ -10,6 +10,7 @@ contents below. Inside of these subfolder you'll find detailed `README.md` files
 
 ## 📂 Structure
 
-| Assignment | Topic                 | Link                  | Description                              |
+| Assignment | Topic | Link | Description |
 | :--------- | :-------------------- | :-------------------- | :--------------------------------------- |
-| **HT-1**   | Agents & Environments | 📂 [View Folder](./HT-1/) | PEAS analysis for a solar cleaning robot, metric design for a traffic system in Guatemala City, and a simple reflex agent implementation. |
+| **HT-1** | Agents & Environments | 📂 [View Folder](./HT-1/) | PEAS analysis for a solar cleaning robot, metric design for a traffic system in Guatemala City, and a simple reflex agent implementation. |
+| **Lab-01** | Performance Metrics & Data Cleaning | 📂 [View Folder](./Lab-01/) | Business case analysis (Precision/Recall & adjusted $R^2$), manual data cleaning (imputation & undersampling), and MAE/RMSE implementations with $L_p$ norm sensitivity analysis |
