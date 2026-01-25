@@ -5,12 +5,12 @@
 This assignment explores the selection and application of performance metrics in AI models, ranging from business logic
 dilemmas to technical implementation of data cleaning pipelines and regression metrics.
 
-- **Business Dilemma Analysis**: Evaluation of Precision, Recall, Accuracy, and Adjusted R-Squared in real-world scenarios (Medical screening, Spam filtering, and Real Estate valuation)
+- **Business Dilemma Analysis**: Evaluation of Precision, Recall, Accuracy, and Adjusted $R^2$ in real-world scenarios (Medical screening, Spam filtering, and Real Estate valuation)
 
 - **Data Engineering Pipeline**: Manual implementation of a data processing pipeline in Python, including synthetic dataset generation, mean-based imputation, and manual undersampling
   for class imbalance—built without "black-box" cleaning libraries.
 
-- **Regression Metrics & Norms**: From-scratch implementation of MAE and RMSE to analyze the mathematical sensitivity of L1, L2, and Chebyshev (bonus) norms when dealing with
+- **Regression Metrics & Norms**: From-scratch implementation of MAE and RMSE to analyze the mathematical sensitivity of $L_1$, $L_2$, and  Chebyshev ($L_\infty$, bonus) norms when dealing with
   catastrophic outliers in critical contexts like medicine.
 
 ## 📂 Deliverables
