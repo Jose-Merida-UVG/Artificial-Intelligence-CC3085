@@ -6,6 +6,23 @@
 \usepackage{enumitem}
 \usepackage{tcolorbox}
 \usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize, % Aquí cambias el tamaño (tiny < scriptsize < footnotesize < small)
+    breaklines=true,
+    columns=flexible,
+    keepspaces=true,
+    commentstyle=\color{gray}\itshape,
+    keywordstyle=\color{blue!70!black}\bfseries,
+    stringstyle=\color{green!40!black},
+    frame=L,
+    xleftmargin=2em,
+    showstringspaces=false,
+    tabsize=4
+}
 
 \title{\textbf{Laboratorio 1: Métricas de Desempeño} \vspace{1em}\\
 Inteligencia Artificial - CC3085}
@@ -23,7 +40,7 @@ responda las preguntas justificando su respuesta.}
     \begin{enumerate}
       \item \textit{En este contexto, ¿qué es peor: un \textbf{Falso Positivo} o \textbf{Falso Negativo}?}
 
-        \vspace{0.5em}\\
+        \vspace{0.5em}
         En este caso, un \textbf{falso negativo} es significativamente más peligroso (o \textit{peor}). En el caso de un
         \textbf{falso negativo}, el paciente abandona completamente la posibilidad de tener la enfermedad y se elimina cualquier
         posibilidad de recibir tratamiento oportuno. Mientras que en un \textbf{falso positivo}, el paciente continúa con el monitoreo
@@ -39,7 +56,7 @@ responda las preguntas justificando su respuesta.}
       \item \textit{Basado en lo anterior, si tuviera que optimizar el modelo priorizando una sola métrica entre
         \textbf{Precisión (Precision)} y \textbf{Sensibilidad (Recall / Sensitivity)}, ¿cuál escogería y por qué?}
 
-        \vspace{0.5em}\\
+        \vspace{0.5em}
         Definitivamente sería \textbf{recall}. Utilizando precisión, el modelo se estaría enfocando en minimizar
         los \textbf{falsos positivos}. Por otro lado, el \textbf{recall} busca minimizar los \textbf{falsos negativos}.
         En otras palabras, utilizando \textbf{recall} estamos entrenando al modelo para identificar la mayor cantidad
@@ -51,7 +68,7 @@ responda las preguntas justificando su respuesta.}
       \item \textit{¿Por qué el Accuracy sería una métrica peligrosa para presentar a los inversionistas en este
         caso específico?}
         
-        \vspace{0.5em}\\
+        \vspace{0.5em}
         Primero que nada, el \textbf{accuracy} realmente no cuenta la historia completa. Para cualquier modelo que estemos
         diseñando, es clave tomar múltiples métricas en cuenta a la hora de analizar su rendimiento y utilidad en el mundo
         real. Esto cubre las métricas de \textbf{recall} y \textbf{precision} discutidas anteriormente, dónde buscamos
@@ -112,7 +129,7 @@ responda las preguntas justificando su respuesta.}
             La métrica a observar sería $R^2 \ ajustado$. Aquí se modifica la fórmula, agregando una penalización por agregar
             variables nuevas. La fórmula modificada es la siguiente:
 
-              \[Adjusted \ R^2 = 1 - \frac{(1-R^2)(N-1)}_{N - p - 1}\]
+              \[Adjusted \ R^2 = 1 - \frac{(1-R^2)(N-1)}{N - p - 1}\]
 
             Donde:
 
@@ -134,4 +151,161 @@ responda las preguntas justificando su respuesta.}
             validez a su sugerencia de implementar nuevas variables. De esta manera podemos explorar brevemente algunas sugerencias,
             manteniendo clara la visión de optimizar en cuanto a la métrica $R^2 \ ajustado$.
       \end{enumerate}
+
+\section*{Task 2 - Ingeniería de Datos}
+\textit{Utilizando Python (Pandas/Numpy), simule y procese un dataset. No se permite utilizar funciones mágicas de limpieza automática
+(como SimpleImputer de sklearn), deben hacerlo con lógica de programación para demostrar que entienden el proceso.}
+
+\vspace{1em}
+Todo este Task fue entregado como \texttt{task\_2.py} en Canvas, decidí colocar bloques de código tomados del archivo
+aquí en el informe. También se encuentran ambos este informe y los archivos .py en el 
+\href{https://github.com/Jose-Merida-UVG/Artificial-Intelligence-CC3085/tree/main/Lab-01}{\underline{\textit{repositorio de GitHub}}}.
+  \begin{enumerate}
+      \item \textbf{Generación de Dataset Sucio}.
+        \begin{enumerate}
+          \item \textit{Cree un DataFrame de 100 filas y 3 columnas: Edad, Salario y Compro\_Producto (0 o 1).}
+          \item \textit{Introduzca intencionalmente valores NaN en el 10\% de la columna Edad.}
+          \item \textit{Genere un desbalance de clases en Compro\_Producto: 90 filas deben ser `0` y 10 filas `1`.}
+        \end{enumerate}
+      \begin{lstlisting}
+# Initialize empty list of dictionaries to store data
+data_list = []
+
+# Add 100 entries
+for i in range(100):
+    # Initialize row with random values, all '0's initially for 'Compro_Producto'
+    row = {
+        "Edad": np.random.randint(16, 90),
+        "Salario": np.random.uniform(4000, 50000),
+        "Compro_Producto": 0,
+    }
+    # Add row to list
+    data_list.append(row)
+
+# Turn list into DF
+df = pd.DataFrame(data_list)
+
+# Set 10 random entries in 'Edad' to NaN
+df.loc[df.sample(10).index, "Edad"] = np.nan
+
+# Set 10 random samples in 'Compro_Producto' to '1'
+df.loc[df.sample(10).index, "Compro_Producto"] = 1\end{lstlisting}
+
+      \item \textbf{Manejo de Datos Faltantes}
+        \begin{enumerate}
+          \item \textit{Escriba un algoritmo que recorra la columna Edad.}
+          \item \textit{Si encuentra algun valor faltante, rellénelo con el promedio de las edades existentes.}
+          \item \textit{Pregunta extra en código (comentario): ¿En qué situación usar el promedio sería una  mala idea
+            y sería mejor usar la mediana?}
+        \end{enumerate}
+
+      \begin{lstlisting}
+# Calculate mean for 'Edad' column
+mean = df["Edad"].mean()
+
+# Manually iterate through all rows replacing nans
+for i, row in df.iterrows():
+    if pd.isna(row["Edad"]):
+        df.at[i, "Edad"] = mean\end{lstlisting}
+
+      Para el inciso C, la respuesta se encuentra en el código y adicionalmente se responde a continuación:
+
+      El promedio es una mala idea si se tienen outliers extremos. Por ejemplo, para la lista [1,1,x,1000]
+      (a parte de probablemente ser un error de entrada) el promedio es de 334 mientras que viendo los datos
+      crudos la mejor idea podría ser un valor cercano a 1. También se puede tomar un ``approach`` más visual
+      y basarse en la longitud de las colas para identificar el sesgo. Otro ejemplo sería el salaio o ingresos
+      mensuales promedios en USA donde el top 0.1\% tiene del 13-14\% de las riquezas. Aquí el promedio y
+      mediana de los ingresos son \$75000 y \$55000 aproximadamente, definitivamente deberíamos utilizar la
+        mediana para representar los valores faltantes.
+
+      \item \textbf{Manejo de Datos Desbalanceados (Undersampling Manual):}
+        \begin{enumerate}
+          \item \textit{Debe mantener todas las filas de la clase minoritaria (`1`)}
+          \item \textit{Debe seleccionar aleatoriamente un número de filas de la clase mayoritaria (`0`) igual
+            al número de filas de la clase minoritaria.}
+          \item \textit{El resultado debe ser un nuevo DataFrame balanceado}
+        \end{enumerate}
+        \begin{lstlisting}
+# Function to balance the dataset
+def undersample(df, target, min, maj):
+    minority = df[df[target] == min]
+    majority = df[df[target] == maj]
+
+    n_min = len(minority)
+
+    majority_sample = majority.sample(n=n_min)
+
+    balanced_df = pd.concat([minority, majority_sample])
+
+    return balanced_df
+
+
+# Balance the dataset
+balanced_df = undersample(df, "Compro_Producto", 1, 0)\end{lstlisting}
+      \end{enumerate}
+\section*{Task 3 - Ingeniería de Datos}
+\textit{Escriba dos funciones en Python desde 0 (usando math o numpy) para calcular el error de dos listas de valores:}
+  \begin{itemize}
+    \item y\_real  = [100, 150, 200, 250, 300] (Valores reales)
+    \item y\_pred = [110, 140, 210, 240, 500] (Predicciones - Note el error masivo en el último dato)
+  \end{itemize}
+
+\vspace{1em}
+  Todo este Task fue entregado como \texttt{task\_3.py} en Canvas, decidí colocar bloques de código tomados del archivo aquí en
+  el informe. También se encuentran ambos este informe y los archivos .py en el 
+  \href{https://github.com/Jose-Merida-UVG/Artificial-Intelligence-CC3085/tree/main/Lab-01}{\underline{\textit{repositorio de GitHub}}}.
+
+  \begin{enumerate}
+    \item \textit{Implemente la fórmula de RMSE vista en clase, como una función}
+      \begin{lstlisting}
+def rmse(y_real, y_pred):
+    sum = 0
+    n = len(y_real)
+    for i in range(n):
+        sum += (y_pred[i] - y_real[i]) ** 2
+
+    avg = sum / n
+
+    return math.sqrt(avg)\end{lstlisting}
+    \item \textit{Implemente la fórmula de MAE vista en clase, como una función}
+      \begin{lstlisting}
+def mae(y_real, y_pred):
+    sum = 0
+    n = len(y_real)
+    for i in range(n):
+        sum += abs(y_pred[i] - y_real[i])
+
+    return sum / n\end{lstlisting}
+
+    \item \textit{Comparación (Adicionalmente, se encuentran los resultados y el análisis como prints dentro del código):}
+      \begin{itemize}
+        \item \textbf{Resultados}
+
+          MAE: 48.0, RMSE: 89.89
+        \item \textbf{¿Cuál de las dos métricas penalizó más el error del último dato?}
+
+          El \textit{RMSE}, definitivamiente. Esto se debe a la manera que se realizan las mediciones, dónde el \textit{MAE} todos los
+          errores se tratan por igual. Mientras que en el \textit{RMSE}, los errores más grandes se ven más penalizados. Podemos tomar
+          también como ejemplo, digamos que tenemos una lista con 10 observaciones. Bajo el \textit{MAE}, es equivalente que todas
+          nuestras predicciones tuvieran un error de 50 a que una sola predicción tuviera un error de 500. Mientras que el \textit{RMSE},
+          similar a como fue en los resultados de este código, penalizaría más la predicción \textit{absurda} con un error de 500.
+
+        \item \textbf{¿Por qué esto es importante si estamos prediciendo, por ejemplo, dosis de medicamentos?}
+
+          En el caso de la dosis de medicamentos, las predicciones muy poco certeras pueden llegar a tener repercusiones sobre
+          la salud del paciente. Es un caso dónde es completamente diferente tener 10 casos con un error pequeño, en comparación a
+          9 casos perfectos y un caso dónde la dosis es letal. Siguiendo el ejemplo del inciso anterior, digamos que las dosis se
+          mantienen en valores alrededor de 250mg. Con todos los errores alrededor de 50mg, todos los pacientes estarían recibiendo 
+          +/- 50mg (20\% de una dosis promedio) en comparación a su dosis adecuada. Por otro lado, tendríamos 9 pacientes con su dosis
+          perfecta pero uno de ellos recibió 500mg extra. Es decir, alrededor de 3x la dosis promedio de medicamento que deberían
+          recibir los pacientes. Claramente, deberíamos penalizar más los errores catastróficos utilizando métricas como \textit{RMSE}.
+
+          Como nota adicional, también tenemos diferentes métricas que podemos utilizar. \textit{MAE} utiliza la norma $L_1$, mientras que
+          \textit{RMSE} la norma $L_2$. Existen normas $L_p$ (que no voy a definir por brevedad), dónde mientras $p$ aumenta se penalizan
+          aún más los valores extremos. Aquí podría ser una buena idea utilizar la Norma de Chebyshev ($L_\infty$), dónde se ignora
+          completamente el promedio y únicamente se enfoca en el peor caso posible.
+      \end{itemize}
+  \end{enumerate}
+
+
 \end{document}
