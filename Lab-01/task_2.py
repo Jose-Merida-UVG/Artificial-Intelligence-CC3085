@@ -26,6 +26,13 @@ df.loc[df.sample(10).index, "Edad"] = np.nan
 # Set 10 random samples in 'Compro_Producto' to '1'
 df.loc[df.sample(10).index, "Compro_Producto"] = 1
 
+# Print dimensions / properties to verify
+print("1. Generacion Dataset Sucio")
+
+print(
+    f"Filas: {df.shape[0]} | Columnas: {df.shape[1]} | Nulls en Edad: {df['Edad'].isnull().sum()} | Compro_Producto con '1': {df['Compro_Producto'].sum()}"
+)
+
 # 2. Data Inputter
 
 # Calculate mean for 'Edad' column
@@ -36,6 +43,16 @@ mean = df["Edad"].mean()
 for i, row in df.iterrows():
     if pd.isna(row["Edad"]):
         df.at[i, "Edad"] = mean
+
+new_mean = df["Edad"].mean()
+
+print("2. Imputacion")
+
+print(f"Nulls en Edad: {df['Edad'].isnull().sum()}")
+
+print(
+    f"Media Anterior: {mean:.2f} | Nueva Media: {new_mean:.2f} | Diferencia: {(mean - new_mean):.2f} | Son iguales si la imputacion se realizo correctamente"
+)
 
 # Pregunta extra: ¿En que situación usar el promedio sería una mala idea y sería mejor utilizar la mediana?
 
@@ -66,3 +83,9 @@ def undersample(df, target, min, maj):
 
 # Balance the dataset
 balanced_df = undersample(df, "Compro_Producto", 1, 0)
+
+print("3. Manejo de datos desbalanceados")
+
+print(
+    f"Filas: {balanced_df.shape[0]} | Compro_Producto con '1': {balanced_df['Compro_Producto'].sum()} | Compro_Producto con '0' {balanced_df.shape[0] - balanced_df['Compro_Producto'].sum()}"
+)
