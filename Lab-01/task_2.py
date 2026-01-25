@@ -64,7 +64,7 @@ print(
 # mediana de los ingresos son $75000 y $55000 aproximadamente, definitivamente deberíamos utilizar la
 # mediana.
 
-# Unbalanced data management
+# 3. Unbalanced data management
 
 
 # Function to balance the dataset
