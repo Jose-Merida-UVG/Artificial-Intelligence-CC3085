@@ -3,12 +3,13 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath, amssymb, amsfonts}
 \usepackage{booktabs}
-\usepackage{enumerate}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{pgfplots}
+
 
 \lstset{
     language=Python,
@@ -24,7 +25,7 @@
     showstringspaces=false,
     tabsize=4
 }
-\title{\textbf{Laboratorio 1: Métricas de Desempeño} \vspace{1em}\\
+\title{\textbf{Laboratorio 1: Preparación de Datos, KNN y Bias-Variance} \vspace{1em}\\
 Inteligencia Artificial - CC3085}
 \author{José Antonio Mérida Castejón}
 \date{\today}
@@ -32,11 +33,115 @@ Inteligencia Artificial - CC3085}
 \begin{document}
 \maketitle
 
-\section*{Task 1: Análisis de Racionalidad y Métricas}
-  \begin{enumerate}
-      \item Item 1
-        \item Item 2
-  \end{enumerate}
+\section*{Task 1}
+\textit{Responda las siguientes preguntas justificando su respuesta basándose en el material visto
+en clase. Se espera que demuestren análisis del caso y no solamente un ``copy-paste``.}
 
+\subsection*{El Problema de la Convexidad (Regresión Logística)}
+\textit{Durante la clase, se habló que no podemos usar el Error Cuadrático Medio (MSE) para la
+Regresión Logística. Con esto en mente considere el escenario donde usted asume el rol de Lead AI
+Engineer y un Junior le presenta un modelo de clasificación binaria que usa una función sigmoide, pero
+insiste en entrenarlo usando la fórmula MSE porque ``es lo que usó en regresión lineal y funcionaba
+    bien``.}\\
+
+\textit{Explíquele técnicamente (y gráficamente si es necesario) por qué su modelo probablemente
+se quedará atascado y no encontrará la solución óptima. Mencione el concepto de ``mínimos locales``
+vs ``mínimo global``.}\\
+
+Al entrenar modelos de machine learning, las funciones de pérdida que no tienen \textit{solución de forma 
+cerrada} se optimizan por medio de \textit{descenso de gradiente}. Recordemos que la condición para tener
+una \textit{solución de forma cerrada} implica poder aislar nuestros pesos ($w$) utilizando un número
+finito de operaciones algebráicas. Es decir, podemos simplemente ``despejar`` para cada $w$ y encontrar
+los valores de cada peso. En este caso, podemos intentar encontrar los \textit{puntos críticos} de la
+función pérdida planteada por medio de la \textit{gradiente}:
+$$\sum (y_i - \sigma(w^T x_i)) \sigma'(w^T x_i) x_i = 0$$
+
+\noindent Observamos que los pesos $w$ están atrapados dentro de la función sigmoide:
+$$\sigma(w^T x_i) = \frac{1}{1 + e^{-w^T x_i}}$$
+
+\noindent Esta es una ecuación trascendental. Debido a que $w$ aparece en el exponente dentro de una sumatoria,
+no existe una operación algebraica finita que permita ``despejar`` o aislar los pesos. Por lo tanto, debemos
+utilizar un método numérico iterativo como el \textit{descenso de gradiente}. Adicionalmente, aunque existiera
+una solución de forma cerrada tendríamos problemas al no tener una función \textit{convexa}. Recordemos
+que una función convexa es aquella dónde para cualesquiera dos puntos $x_1$ y $x_2$ en su dominio, al
+trazar una línea recta entre estos puntos la función queda por debajo.
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\begin{figure}[h]
+    \centering
+    % --- GRÁFICA CONVEXA ---
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.8]
+        \begin{axis}[
+            axis lines = middle,
+            title = {Función Convexa ($x^2$)},
+            xtick = \empty, ytick = \empty,
+            xmin=-2.5, xmax=2.5, ymin=-0.5, ymax=6,
+            clip=false,
+            declare function={f(\x) = \x^2;}
+        ]
+            \addplot [domain=-2.2:2.2, samples=100, thick, blue] {f(x)};
+            
+            % Secant lines (cradle effect)
+            \draw [red, dashed, opacity=0.5] (axis cs:-2, {f(-2)}) -- (axis cs:0.5, {f(0.5)});
+            \draw [red, dashed, opacity=0.5] (axis cs:-0.8, {f(-0.8)}) -- (axis cs:2, {f(2)});
+            \draw [red, dashed, thick] (axis cs:-1.6, {f(-1.6)}) -- (axis cs:1.6, {f(1.6)});
+            
+            \fill[red] (axis cs:-1.6, {f(-1.6)}) circle (1.5pt);
+            \fill[red] (axis cs:1.6, {f(1.6)}) circle (1.5pt);
+        \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    % --- GRÁFICA NO CONVEXA ---
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.8]
+        \begin{axis}[
+            axis lines = middle,
+            title = {Función No Convexa (MSE)},
+            xtick = \empty, ytick = \empty,
+            xmin=-2.5, xmax=2.5, ymin=-2, ymax=6,
+            clip=false,
+            declare function={g(\x) = \x^2 + 1.5*sin(deg(4*\x)) + 1;}
+        ]
+            \addplot [domain=-2.2:2.2, samples=200, thick, blue] {g(x)};
+            
+            % Secant lines showing convexity violation
+            \draw [red, dashed, thick] (axis cs:-1.2, {g(-1.2)}) -- (axis cs:0.4, {g(0.4)});
+            \draw [red, dashed, thick] (axis cs:0.2, {g(0.2)}) -- (axis cs:1.8, {g(1.8)});
+            
+            \fill[red] (axis cs:-1.2, {g(-1.2)}) circle (1.5pt);
+            \fill[red] (axis cs:0.4, {g(0.4)}) circle (1.5pt);
+            \fill[red] (axis cs:0.2, {g(0.2)}) circle (1.5pt);
+            \fill[red] (axis cs:1.8, {g(1.8)}) circle (1.5pt);
+
+            % Precise Critical Points
+            \fill[black] (axis cs:-0.362, {g(-0.362)}) circle (2pt);
+            \node[pin=270:{\small \textbf{Global}}] at (axis cs:-0.362, {g(-0.362)}) {};
+            
+            \fill[black] (axis cs:1.086, {g(1.086)}) circle (2pt);
+            \node[pin=270:{\small Local}] at (axis cs:1.086, {g(1.086)}) {};
+            
+        \end{axis}
+        \end{tikzpicture}
+    \end{minipage}
+    \caption{Comparativa de propiedades de convexidad.}
+\end{figure}
+
+Luego de la \textit{demostración por dibujo}, podemos ver que una función convexa nos es sumamente útil
+al buscar optimizar nuestro modelo. Evitando formalidades y demostraciones matemáticas, tener una función
+convexa nos garantiza que el mínimo encontrado sea el mínimo global. Es decir, no tenemos ``trampas`` en dónde
+podamos caer al momento de buscar \textit{puntos críticos} al tener solución de forma cerrada o utilizar
+    \textit{descenso de gradiente.}
+
+Ahora, ya establecimos 
+
+con pesos aleatorios y damos una cierta cantidad de \textit{pasos} buscando la dirección opuesta a la dirección
+más \textit{cuesta arriba} para buscar un mínimo. Apoyándonos del concepto de gradiente, un paso en el
+descenso de gradiente se puede expresar de la siguiente forma:
 
 \end{document}
