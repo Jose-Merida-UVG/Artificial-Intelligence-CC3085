@@ -161,12 +161,19 @@ de personas sanas de manera que queden balanceadas las clases. También existen 
 o \textit{mandar al junior a conseguir más datos}.
 
 \subsection*{Polinomios y la Realidad}
-Observe las gráficas de las diapositivas 38 – 40. Con esto considere y responda. Si su modelo de regresión
+\textit{Observe las gráficas de las diapositivas 38 – 40. Con esto considere y responda. Si su modelo de regresión
 polinomial tiene una pérdida (Loss) de casi 0.0 en el set de entrenamiento (orden 8), pero al probarlo en
-producción con datos nuevos el error es gigante:
+producción con datos nuevos el error es gigante:}
+
+\textit{Que nombre recibe este fenomeno?}
 
 Este efecto recibe el nombre de overfitting, dónde el modelo empieza a memorizar ruido dentro del dataset de
 entrenamiento en lugar de poder captar los patrones subyacentes. Un modelo más complejo puede ajustarse mejor
 al set de entrenamiento, pero también debemos de tomar en cuenta su capacidad de generalizar. 
+
+\textit{Que esta modelando su algoritmo que no deberia modelar}
+
+En este caso, podemos decir que el algoritmo está modelando ruido / comportamientos únicos dentro del set de
+prueba en lugar de patrones subyacentes.
 
 \end{document}
