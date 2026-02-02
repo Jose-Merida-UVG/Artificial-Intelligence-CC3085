@@ -71,7 +71,6 @@ trazar una línea recta entre estos puntos la función queda por debajo.
 
 \begin{figure}[h]
     \centering
-    % --- GRÁFICA CONVEXA ---
     \begin{minipage}{0.48\textwidth}
         \centering
         \begin{tikzpicture}[scale=0.8]
@@ -85,18 +84,13 @@ trazar una línea recta entre estos puntos la función queda por debajo.
         ]
             \addplot [domain=-2.2:2.2, samples=100, thick, blue] {f(x)};
             
-            % Secant lines (cradle effect)
-            \draw [red, dashed, opacity=0.5] (axis cs:-2, {f(-2)}) -- (axis cs:0.5, {f(0.5)});
-            \draw [red, dashed, opacity=0.5] (axis cs:-0.8, {f(-0.8)}) -- (axis cs:2, {f(2)});
-            \draw [red, dashed, thick] (axis cs:-1.6, {f(-1.6)}) -- (axis cs:1.6, {f(1.6)});
+            \fill[black] (axis cs:0, 0) circle (2pt);
+            \node[pin=270:{\small \textbf{Global}}] at (axis cs:0, 0) {};
             
-            \fill[red] (axis cs:-1.6, {f(-1.6)}) circle (1.5pt);
-            \fill[red] (axis cs:1.6, {f(1.6)}) circle (1.5pt);
         \end{axis}
         \end{tikzpicture}
     \end{minipage}
     \hfill
-    % --- GRÁFICA NO CONVEXA ---
     \begin{minipage}{0.48\textwidth}
         \centering
         \begin{tikzpicture}[scale=0.8]
@@ -110,16 +104,7 @@ trazar una línea recta entre estos puntos la función queda por debajo.
         ]
             \addplot [domain=-2.2:2.2, samples=200, thick, blue] {g(x)};
             
-            % Secant lines showing convexity violation
-            \draw [red, dashed, thick] (axis cs:-1.2, {g(-1.2)}) -- (axis cs:0.4, {g(0.4)});
-            \draw [red, dashed, thick] (axis cs:0.2, {g(0.2)}) -- (axis cs:1.8, {g(1.8)});
-            
-            \fill[red] (axis cs:-1.2, {g(-1.2)}) circle (1.5pt);
-            \fill[red] (axis cs:0.4, {g(0.4)}) circle (1.5pt);
-            \fill[red] (axis cs:0.2, {g(0.2)}) circle (1.5pt);
-            \fill[red] (axis cs:1.8, {g(1.8)}) circle (1.5pt);
-
-            % Precise Critical Points
+            % Precise Critical Points (Minima only)
             \fill[black] (axis cs:-0.362, {g(-0.362)}) circle (2pt);
             \node[pin=270:{\small \textbf{Global}}] at (axis cs:-0.362, {g(-0.362)}) {};
             
@@ -129,7 +114,7 @@ trazar una línea recta entre estos puntos la función queda por debajo.
         \end{axis}
         \end{tikzpicture}
     \end{minipage}
-    \caption{Comparativa de propiedades de convexidad.}
+    \caption{Comparativa de mínimos en funciones convexas y no convexas.}
 \end{figure}
 
 Luego de la \textit{demostración por dibujo}, podemos ver que una función convexa nos es sumamente útil
@@ -138,10 +123,50 @@ convexa nos garantiza que el mínimo encontrado sea el mínimo global. Es decir,
 podamos caer al momento de buscar \textit{puntos críticos} al tener solución de forma cerrada o utilizar
     \textit{descenso de gradiente.}
 
-Ahora, ya establecimos 
+    Entonces, si fuésemos a utilizar MSE como función de pérdida para este modelo obtenemos una función ``fea`` dónde
+    tenemos múltiples mínimos locales y puntos silla dónde se puede quedar \textit{atascado} nuestro descenso de
+    gradiente.
 
-con pesos aleatorios y damos una cierta cantidad de \textit{pasos} buscando la dirección opuesta a la dirección
-más \textit{cuesta arriba} para buscar un mínimo. Apoyándonos del concepto de gradiente, un paso en el
-descenso de gradiente se puede expresar de la siguiente forma:
+    Recordemos que para el descensod e gradiente, iniciamos con pesos aleatorios y damos una cierta cantidad de
+    \textit{pasos} buscando la dirección opuesta a la dirección más \textit{cuesta arriba} para buscar un mínimo.
+    En este caso, es muy posible que estemos dando pasos para bajar y nos quedemos ``atascados`` sin dirección
+    alguna porque ya no tenemos más inclinación hacia algún punto en específico.
+
+\subsection*{El problema de la K en KNN}
+
+\textit{Refierase a las slides correspondientes al tema de KNN. Con esto, considere el escenario donde estamos
+clasificando enfermedades raras. Tenemos un dataset de 1,000 pacientes sanos (Clase A) y solo 10
+pacientes con la enfermedad (Clase B). Responda:}
+
+\textit{Si usted elige un K=15 (un número mayor a la cantidad total de casos positivos), ¿qué es lo más
+probable que ocurra matemáticamente con todas las predicciones para nuevos pacientes enfermos?
+¿Por qué el algoritmo de "votación mayoritaria" falla aquí y qué técnica simple de pre\-procesamiento
+(vista en el lab anterior) sería obligatoria antes de usar KNN?}\\
+
+En este caso, lo más probable que suceda es que los pacientes enfermos serán clasificados incorrectamente
+como pacientes sanos. Matemáticamente, para que un nuevo punto sea clasificado como Clase B, necesitaría
+que al menos 8 de sus 15 vecinos más cercanos pertenezcan a esta clase. Dado que tenemos únicamente 10 casos
+positivos en el dataset, incluso si el paciente es idéntico a los pacientes enfermos 5 de sus 15 vecinos
+siguen siendo Clase A. Dado que no necesariamente todos los pacientes enfermos serán idénticos, es muy
+poco probable que existan predicciones de Clase B tomando en cuenta el desbalanceo de clases.
+
+
+La votación mayoritaria falla porque asume que la densidad local de los puntos es representativa de la clase,
+esto causa un sesgo hacia la clase mayoritaria. En este caso, si fuésemos a aumentar aún más el valor de K
+se volvería imposible que la Clase B ganara alguna votación.
+
+
+La técnica de preprocesamiento a utilizar aquí sería undersampling, dónde buscaríamos tomar únicamnente 10 registros
+de personas sanas de manera que queden balanceadas las clases. También existen otras técnicas cómo oversampling, SMOTE
+o \textit{mandar al junior a conseguir más datos}.
+
+\subsection*{Polinomios y la Realidad}
+Observe las gráficas de las diapositivas 38 – 40. Con esto considere y responda. Si su modelo de regresión
+polinomial tiene una pérdida (Loss) de casi 0.0 en el set de entrenamiento (orden 8), pero al probarlo en
+producción con datos nuevos el error es gigante:
+
+Este efecto recibe el nombre de overfitting, dónde el modelo empieza a memorizar ruido dentro del dataset de
+entrenamiento en lugar de poder captar los patrones subyacentes. Un modelo más complejo puede ajustarse mejor
+al set de entrenamiento, pero también debemos de tomar en cuenta su capacidad de generalizar. 
 
 \end{document}
