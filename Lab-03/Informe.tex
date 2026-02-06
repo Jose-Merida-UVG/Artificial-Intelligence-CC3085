@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    columns=flexible,
+    keepspaces=true,
+    commentstyle=\color{gray}\itshape,
+    keywordstyle=\color{blue!70!black}\bfseries,
+    stringstyle=\color{green!40!black},
+    frame=L,
+    xleftmargin=2em,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\title{\textbf{Laboratorio 4: Métricas de Desempeño} \vspace{1em}\\
+Inteligencia Artificial - CC3085}
+\author{José Antonio Mérida Castejón}
+\date{\today}
+\begin{document}
+\maketitle
+
+\subsection*{Task 1 - Teoría}
+Responda con criterio y anàlisis de ingeniero. No se esperan definiciones de libro, si no que
+analice las consecuencias de las decisiones de diseño.
+
+\vspace{1em}
+
+\textbf{La Mentira de la Independencia: Naive Bayes}
+
+\vspace{1em}
+
+En la diapositiva 6 se menciona que Naive Bayes ``Asume independencia entre observaciones``. Con esto
+en mente, considere que usted está construyendo un filtro de spam y su modelo analiza la frase ``Cuenta
+Bancaria``. En el mundo real, la probabilidad de que aparezca la palabra ``Bancaria`` aumenta
+drásticamente si ya apareció la palabra ``Cuenta``. Responda:
+\begin{itemize}
+    \item Si Naive Bayes trata estas dos palabras como eventos independientes (lanzar dos monedas
+    separadas) en lugar de eventos dependientes, ¿está el modelo subestimando o sobreestimando la
+    probabilidad real de la frase conjunta? Justifique su respuesta basándose en la fórmula
+    $P(A \cap B) = P(A) \times P(B)$ vs la realidad.
+\end{itemize}
+
+Naive Bayes, al asumir que los eventos son independientes es completamente incapaz de determinar relaciones
+entre ellos. Desde un aspecto matemático, podemos decir que $P(B\mid A) > P(B)$ dado el enunciado que establece
+que la probabilidad que apareza ``Bancaria`` aumenta al aparecer ``Cuenta``. Por lo tanto, el modelado más
+adecuado (bajo la observación dada en el inciso) nos indica que la probabilidad real es $P(A \cap B) = P(A)
+\times P(B \mid A)$. Mientras que NB nos dice ``estos eventos son completamente independientes, entonces la
+probabilidad que ocurra B luego de A es $P(A) \times P(B)$``.
+
+Como establecimos previamente, $P(B \mid A) > P(B) \implies P(A) \times P(B \mid A) > P(A) \times P(B)$. Es
+decir, nuestro modelo subestimaría la probabilidad de la frase real conjunta.
+
+\textbf{La Economìa de los Datos (SVM)}
+
+\vspace{1em}
+
+Refierase a las slides correspondientes al tema de SVM. Con esto en mente considere, usted entrena un
+SVM con 1 millón de datos de partidas de League of Legends. El modelo resultante identifica 5,000 
+``Vectores de Soporte``. Su jefe le dice que para ahorrar espacio en la base de datos, va a eliminar
+los otros 995,000 puntos de datos que no son vectores de soporte y re-entrenar el modelo solo con
+los 5,000 restantes.
+Responda:
+
+\begin{itemize}
+    \item Matemàticamente, cambiaria la frontera de decision al hacer esto? Por que si o por que no?
+
+        No, la frontera sería la misma ya que esta se determina únicamente por los vectores de soporte.
+
+    \item Explique la eficiencia de memoria de este algoritmo frente a KNN.
+
+        Este algoritmo es más eficiente en memoria, en este caso por ejemplo su tuviésemos un KNN deberíamos de
+        mantener el total de 1 millón de puntos en memoria. Mientras que en SVM únicamente debemos mantener
+        los 5,000 vectores de soporte mencionados.
+\end{itemize}
+
+\textbf{La Miopìa de los Àrboles}
+En las diapositivas se menciona que la construcción del árbol es un ``algoritmo greedy`` (codicioso
+/avaro). Con esto en mente considere, un algoritmo greedy toma la mejor decisión posible en el paso
+actual sin preocuparse por el futuro. Responda:
+
+\begin{itemize}
+
+    \item Si el árbol elige el ``Mejor Feature`` para dividir el nodo raíz porque reduce la impureza drásticamente
+ahora, ¿garantiza esto que el árbol final será el más óptimo/pequeño posible?
+
+    No necesariamente, una división ``mala`` puede permitirnos realizar divisiones perfectas en los siguientes
+    niveles. Al utilizar un approach greedy, descartamos completamente las posibilidades a futuro y elegimos
+    el beneficio ``local`` por encima de la solución global.
+
+\item Dibuje o describa un escenario lógico donde elegir una división ``sub-óptima`` al inicio podría
+    llevar a un mejor árbol al final. Qué nombre técnico recibe este fenómeno
+
+
+    A este fenómeno se le llama ``greedy search myopia``.
+\end{document}
