@@ -24,7 +24,7 @@
     tabsize=4
 }
 
-\title{\textbf{Laboratorio 4: Métricas de Desempeño} \vspace{1em}\\
+\title{\textbf{Laboratorio 3: Naive Bayes, SVM y Árboles} \vspace{1em}\\
 Inteligencia Artificial - CC3085}
 \author{José Antonio Mérida Castejón}
 \date{\today}
@@ -41,67 +41,121 @@ analice las consecuencias de las decisiones de diseño.
 
 \vspace{1em}
 
-En la diapositiva 6 se menciona que Naive Bayes ``Asume independencia entre observaciones``. Con esto
+\textit{En la diapositiva 6 se menciona que Naive Bayes ``Asume independencia entre observaciones``. Con esto
 en mente, considere que usted está construyendo un filtro de spam y su modelo analiza la frase ``Cuenta
 Bancaria``. En el mundo real, la probabilidad de que aparezca la palabra ``Bancaria`` aumenta
-drásticamente si ya apareció la palabra ``Cuenta``. Responda:
+drásticamente si ya apareció la palabra ``Cuenta``. Responda:}
 \begin{itemize}
-    \item Si Naive Bayes trata estas dos palabras como eventos independientes (lanzar dos monedas
+    \item \textit{ Si Naive Bayes trata estas dos palabras como eventos independientes (lanzar dos monedas
     separadas) en lugar de eventos dependientes, ¿está el modelo subestimando o sobreestimando la
     probabilidad real de la frase conjunta? Justifique su respuesta basándose en la fórmula
-    $P(A \cap B) = P(A) \times P(B)$ vs la realidad.
+    $P(A \cap B) = P(A) \times P(B)$ vs la realidad.}
 \end{itemize}
 
 Naive Bayes, al asumir que los eventos son independientes es completamente incapaz de determinar relaciones
 entre ellos. Desde un aspecto matemático, podemos decir que $P(B\mid A) > P(B)$ dado el enunciado que establece
 que la probabilidad que apareza ``Bancaria`` aumenta al aparecer ``Cuenta``. Por lo tanto, el modelado más
 adecuado (bajo la observación dada en el inciso) nos indica que la probabilidad real es $P(A \cap B) = P(A)
-\times P(B \mid A)$. Mientras que NB nos dice ``estos eventos son completamente independientes, entonces la
-probabilidad que ocurra B luego de A es $P(A) \times P(B)$``.
+\times P(B \mid A)$. Mientras que NB nos dice \textit{``estos eventos son completamente independientes, entonces la
+probabilidad que ocurra B luego de A es $P(A) \times P(B)$``}.
+
+\vspace{0.5em}
 
 Como establecimos previamente, $P(B \mid A) > P(B) \implies P(A) \times P(B \mid A) > P(A) \times P(B)$. Es
-decir, nuestro modelo subestimaría la probabilidad de la frase real conjunta.
+decir, nuestro modelo subestimaría la probabilidad de la frase real conjunta. Esta problemática también
+pone en duda el desempeño de Naive Bayes en cuanto a modelos que involucran el procesamiento de lenguaje
+natural. Existen algunas relaciones como frases conjuntas, o \textit{secuencias específicas} que
+proporcionan significado más allá de las palabras individuales.
+
+\vspace{1em}
 
 \textbf{La Economìa de los Datos (SVM)}
 
 \vspace{1em}
 
-Refierase a las slides correspondientes al tema de SVM. Con esto en mente considere, usted entrena un
+\textit{Refierase a las slides correspondientes al tema de SVM. Con esto en mente considere, usted entrena un
 SVM con 1 millón de datos de partidas de League of Legends. El modelo resultante identifica 5,000 
 ``Vectores de Soporte``. Su jefe le dice que para ahorrar espacio en la base de datos, va a eliminar
 los otros 995,000 puntos de datos que no son vectores de soporte y re-entrenar el modelo solo con
 los 5,000 restantes.
-Responda:
+Responda:}
 
 \begin{itemize}
-    \item Matemàticamente, cambiaria la frontera de decision al hacer esto? Por que si o por que no?
+    \item \textit{Matemàticamente, cambiaria la frontera de decision al hacer esto? Por que si o por que no?}
 
+        \vspace{1em}
         No, la frontera sería la misma ya que esta se determina únicamente por los vectores de soporte.
+        Analizando un poco más a profundidad, tenemos que el vector $w$ que define los pesos es el
+        siguiente:
 
-    \item Explique la eficiencia de memoria de este algoritmo frente a KNN.
+        \begin{center}
+            $\sum_{i=1}^{n} \alpha_i y_i x_i$
+        \end{center}
 
+        Donde $a_i$ representa el multiplicador de Lagrange de cada punto $x_i$. Entonces, por
+        definición sabemos que únicamente los vectores de soporte tienen $a_i > 0$ y son
+        los únicos que tienen efecto sobre $w$.
+
+    \item \textit{Explique la eficiencia de memoria de este algoritmo frente a KNN.}
+
+        \vspace{1em}
         Este algoritmo es más eficiente en memoria, en este caso por ejemplo su tuviésemos un KNN deberíamos de
         mantener el total de 1 millón de puntos en memoria. Mientras que en SVM únicamente debemos mantener
         los 5,000 vectores de soporte mencionados.
 \end{itemize}
 
-\textbf{La Miopìa de los Àrboles}
-En las diapositivas se menciona que la construcción del árbol es un ``algoritmo greedy`` (codicioso
+\textbf{La Miopía de los Árboles}
+\textit{En las diapositivas se menciona que la construcción del árbol es un ``algoritmo greedy`` (codicioso
 /avaro). Con esto en mente considere, un algoritmo greedy toma la mejor decisión posible en el paso
-actual sin preocuparse por el futuro. Responda:
+actual sin preocuparse por el futuro. Responda:}
 
 \begin{itemize}
 
-    \item Si el árbol elige el ``Mejor Feature`` para dividir el nodo raíz porque reduce la impureza drásticamente
-ahora, ¿garantiza esto que el árbol final será el más óptimo/pequeño posible?
+    \item \textit{Si el árbol elige el ``Mejor Feature`` para dividir el nodo raíz porque reduce la impureza drásticamente
+        ahora, ¿garantiza esto que el árbol final será el más óptimo/pequeño posible?}
+
+    \vspace{1em}
 
     No necesariamente, una división ``mala`` puede permitirnos realizar divisiones perfectas en los siguientes
     niveles. Al utilizar un approach greedy, descartamos completamente las posibilidades a futuro y elegimos
-    el beneficio ``local`` por encima de la solución global.
+    el beneficio ``local`` por encima de la solución global. Tomando como ejemplo un juego de ajedrez, 
+    existen jugadas dónde el sacrificio de una pieza resulta en una mejor posición algunos movimientos
+    después. Si tomamos un approach greedy, solo estaríamos viendo la pérdida inmediata de material
+    y descartaríamos el movimiento completamente.
 
-\item Dibuje o describa un escenario lógico donde elegir una división ``sub-óptima`` al inicio podría
-    llevar a un mejor árbol al final. Qué nombre técnico recibe este fenómeno
+\item \textit{Dibuje o describa un escenario lógico donde elegir una división ``sub-óptima`` al inicio podría
+    llevar a un mejor árbol al final. Qué nombre técnico recibe este fenómeno}
+
+    Supongamos que tenemos un dataset y estamos entrenando un modelo inteligente para saber
+    cuando se abre una bóveda en un banco. Esta bóveda requiere de dos llaves, de manera que si
+    ambas son giradas se abre la bóveda. Sin embargo, tenemos una variable adicional que representa
+    si la luz del pasillo estaba encendida o no (completamente irrelevante para la apertura de
+    la bóveda). Claramente, el modelo óptimo ignoraría por completamente la variable adicional de luz
+    encendida y sería una simple decisión para encontrar $llave_1 = 1, llave_2 = 1$ dónde de lo contrario
+    se encuentra cerrada la bóveda. Sin embargo, al momento de dar el primer paso puede que el modelo
+    encuentre lo siguiente:
+
+    \begin{itemize}
+        \item $llave_1$: Como ambas llaves necesitan girarse, el algoritmo nota que aunque esta este
+            girada la mayoría de los casos no indican que la bóveda se abra.
+
+        \item $llave_2$: De manera idéntica al anterior, el algoritmo ve que la llave se gira pero
+            no se correlaciona directamente con la apertura de la bóveda.
+
+        \item $luz$: Gracias al ruido estadístico, el $60\%$ de observaciones dónde la luz está
+            encendida la boveda está abierta.
+    \end{itemize}
+
+    Tomando un approach greedy, claramente la decisión inicial es separar los datos con la variable
+    $luz$. Mientras que por medio de una decisión subóptima (como elegir $llave_1$ inicialmente,
+    a pesar que no nos beneficie de momento) nos permite realizar las divisiones necesarias
+    para encontrar el único caso dónde se abre la bóveda (ambas llaves giradas). Es decir, puede
+    que algunas variables por si solas no sean beneficiosas de momento, pero esto no significa que
+    sean malas elecciones.
+
+    \vspace{1em}
+
+    A este fenómeno se le conoce como \textit{Greedy Myopia}.
 
 
-    A este fenómeno se le llama ``greedy search myopia``.
 \end{document}
