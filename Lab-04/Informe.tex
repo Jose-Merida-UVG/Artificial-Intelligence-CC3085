@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    columns=flexible,
+    keepspaces=true,
+    commentstyle=\color{gray}\itshape,
+    keywordstyle=\color{blue!70!black}\bfseries,
+    stringstyle=\color{green!40!black},
+    frame=L,
+    xleftmargin=2em,
+    showstringspaces=false,
+    tabsize=4
+}
+
+\title{\textbf{Laboratorio 4: SGD \& Redes Neuronales} \vspace{1em}\\
+Inteligencia Artificial - CC3085}
+\author{José Antonio Mérida Castejón}
+\date{\today}
+\begin{document}
+\maketitle
+
+\subsection*{Task 1 - Teoría}
+Responda con criterio y anàlisis de ingeniero. No se esperan definiciones de libro, si no que
+analice las consecuencias de las decisiones de diseño.
+
+    \textbf{El Dilema del ``Step Size''}
+
+
+\textit{Durante la clase hablamos sobre el tamaño del paso. Suponga que está entrenando una red
+    neuronal profunda con SGD (Estocástico) y nota que la función de pérdida (Loss) disminuye
+    rápidamente al inicio, pero luego empieza a oscilar violentamente sin llegar nunca a un valor
+    mínimo estable.}
+
+    \begin{enumerate}
+        \item \textit{Explique que está sucediendo geométricamente en la superficie de error}\\
+
+
+
+        \item \textit{Explique por qué una estrategia de Learning Rate Decay ($\eta=\frac{1}{\sqrt t}$)
+            solucionaría este problema mejor que simplemente elegir un learning rate muy pequeño
+            desde el inicio}
+    \end{enumerate}
+
+\textbf{Gradiente en Cero}
+
+\textit{Durante la clase hablamos sobre como evitar las gradientes cero. En base a eso responda}
+
+\begin{enumerate}
+    \item \textit{Si usted diseña una red profunda utilizando únicamente la función Sigmoide en todas las capas
+    ocultas, es muy probable que sufra el problema del Vanishing Gradient (Desvanecimiento del
+    Gradiente). Explique matemáticamente por qué ocurre esto al hacer Backpropagation (piense en la
+    derivada máxima de la sigmoide).}
+
+    \item \textit{¿Por qué la función ReLU mitiga este problema en la parte positiva del eje?}
+\end{enumerate}
+
+\textbf{Capacidad del Modelo}
+
+\textit{Si comparamos una Red Neuronal con 1 capa oculta de 100 neuronas contra una Red Neuronal con 10
+capas ocultas de 10 neuronas cada una (ambas tienen un número similar de parámetros).}
+
+    \begin{enumerate}
+        \item\textit{¿Cuál de las dos tiene mayor capacidad para modelar funciones no lineales complejas y
+        composicionales? ¿Por qué? Base se respuesta con lo visto en clase (``¿Por qué redes
+        profundas?'').}
+
+    \end{enumerate}
+
+
+
+
+\end{document}
