@@ -9,7 +9,8 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{parskip}
-
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18} % O la versión que tengas
 \lstset{
     language=Python,
     basicstyle=\ttfamily\footnotesize,
@@ -38,21 +39,69 @@ analice las consecuencias de las decisiones de diseño.
 
     \textbf{El Dilema del ``Step Size''}
 
-
 \textit{Durante la clase hablamos sobre el tamaño del paso. Suponga que está entrenando una red
     neuronal profunda con SGD (Estocástico) y nota que la función de pérdida (Loss) disminuye
     rápidamente al inicio, pero luego empieza a oscilar violentamente sin llegar nunca a un valor
     mínimo estable.}
 
     \begin{enumerate}
-        \item \textit{Explique que está sucediendo geométricamente en la superficie de error}\\
 
+        \item \textit{Explique que está sucediendo geométricamente en la superficie de error}
 
+        En términos simples, cada uno de nuestros 'saltos' nos está mandando hacia 'el otro lado' del
+        mínimo que queremos encontrar.
 
-        \item \textit{Explique por qué una estrategia de Learning Rate Decay ($\eta=\frac{1}{\sqrt t}$)
-            solucionaría este problema mejor que simplemente elegir un learning rate muy pequeño
-            desde el inicio}
-    \end{enumerate}
+        En términos más matemáticos, la gradiente nos indica la dirección dónde la función es más
+        creciente (y su negativo, la dirección de descenso más pronunciado). Es decir, la información
+        con la que contamos es únicamente una dirección, sin saber la distancia exacta a la que se
+        encuentra el mínimo que buscamos. Esta distancia que se 'recorre' en cada iteración se determina
+        únicamente a través del Learning Rate (tamaño del paso).
+
+        Teniendo un Learning Rate demasiado alto, el tamaño del paso calculado por la red supera la
+        distancia real al mínimo. Esto provoca que nuestros pasos jamás sean tan precisos como para
+        ubicar un mínimo, resultando en un rebote constante entre las "paredes" de la función de error.
+
+        A continuación, podemos visualizar este comportamiento en una superficie de error simple en
+        2 dimensiones ($f(x) = x^2$):
+
+\begin{center}
+\begin{tikzpicture}
+    \begin{axis}[
+        width=6cm, height=4cm,
+        axis lines=middle,
+        xmin=-3, xmax=3,       % Simétrico para alineación perfecta
+        ymin=0, ymax=5,
+        ticks=none,            % Sin números
+        xlabel={$w$}, ylabel={},
+        label style={font=\small},
+        clip=false
+    ]
+
+    % 1. Parábola
+    \addplot [black!60, thick, domain=-2.5:2.5, samples=100] {x^2};
+
+    % Coordenadas
+    \coordinate (Start) at (axis cs:2,4);
+    \coordinate (Big)   at (axis cs:-2,4);
+    \coordinate (Good)  at (axis cs:0,0);
+    \coordinate (Small) at (axis cs:1.5,2.25);
+
+    % 2. Flechas (Solo colores)
+    
+    % A) Paso Grande (ROJO)
+    \draw[->, thick, red] (Start) -- (Big);
+
+    % B) Paso Ideal (TEAL / Verde Azulado)
+    \draw[->, thick, teal] (Start) -- (Good);
+ C) Paso Pequeño (NARANJA)
+    \draw[->, thick, orange] (Start) -- (Small);
+
+    % Punto de Inicio
+    \addplot[mark=*, mark size=2pt] coordinates {(2,4)};
+
+    \end{axis}
+\end{tikzpicture}
+\end{center}
 
 \textbf{Gradiente en Cero}
 
