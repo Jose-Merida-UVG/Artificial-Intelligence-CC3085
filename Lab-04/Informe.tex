@@ -10,7 +10,9 @@
 \usepackage{xcolor}
 \usepackage{parskip}
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.18} % O la versión que tengas
+\usetikzlibrary{arrows.meta}
+
+\pgfplotsset{compat=1.18}
 \lstset{
     language=Python,
     basicstyle=\ttfamily\footnotesize,
@@ -48,60 +50,91 @@ analice las consecuencias de las decisiones de diseño.
 
         \item \textit{Explique que está sucediendo geométricamente en la superficie de error}
 
-        En términos simples, cada uno de nuestros 'saltos' nos está mandando hacia 'el otro lado' del
+        En términos simples, cada uno de nuestros `saltos' nos está mandando hacia `el otro lado' del
         mínimo que queremos encontrar.
 
         En términos más matemáticos, la gradiente nos indica la dirección dónde la función es más
-        creciente (y su negativo, la dirección de descenso más pronunciado). Es decir, la información
+        creciente (y su negativo, la dirección del descenso más pronunciado). Es decir, la información
         con la que contamos es únicamente una dirección, sin saber la distancia exacta a la que se
-        encuentra el mínimo que buscamos. Esta distancia que se 'recorre' en cada iteración se determina
+        encuentra el mínimo que buscamos. Esta distancia que se `recorre' en cada iteración se determina
         únicamente a través del Learning Rate (tamaño del paso).
 
-        Teniendo un Learning Rate demasiado alto, el tamaño del paso calculado por la red supera la
+        Teniendo un Learning Rate demasiado alto, el tamaño del paso calculado supera la
         distancia real al mínimo. Esto provoca que nuestros pasos jamás sean tan precisos como para
-        ubicar un mínimo, resultando en un rebote constante entre las "paredes" de la función de error.
+            ubicar un mínimo, resultando en un rebote constante entre las ``paredes''' de la función de error.
 
         A continuación, podemos visualizar este comportamiento en una superficie de error simple en
-        2 dimensiones ($f(x) = x^2$):
+        2 dimensiones:
 
-\begin{center}
-\begin{tikzpicture}
-    \begin{axis}[
-        width=6cm, height=4cm,
-        axis lines=middle,
-        xmin=-3, xmax=3,       % Simétrico para alineación perfecta
-        ymin=0, ymax=5,
-        ticks=none,            % Sin números
-        xlabel={$w$}, ylabel={},
-        label style={font=\small},
-        clip=false
-    ]
+    \begin{center}
+        \begin{tikzpicture}
+            \begin{axis}[
+                width=6cm, height=4cm,
+                axis lines=middle,
+                xmin=-3, xmax=3,
+                ymin=0, ymax=5,
+                ticks=none,
+                xlabel={$w$}, ylabel={},
+                label style={font=\small},
+                clip=false
+            ]
 
-    % 1. Parábola
-    \addplot [black!60, thick, domain=-2.5:2.5, samples=100] {x^2};
+            \addplot [black!60, thick, domain=-2.5:2.5, samples=100] {x^2};
 
-    % Coordenadas
-    \coordinate (Start) at (axis cs:2,4);
-    \coordinate (Big)   at (axis cs:-2,4);
-    \coordinate (Good)  at (axis cs:0,0);
-    \coordinate (Small) at (axis cs:1.5,2.25);
+            \coordinate (Start) at (axis cs:2,4);
+            \coordinate (Big)   at (axis cs:-2,4);
+            \coordinate (Good)  at (axis cs:0,0);
+            \coordinate (Small) at (axis cs:1.5,2.25);
 
-    % 2. Flechas (Solo colores)
-    
-    % A) Paso Grande (ROJO)
-    \draw[->, thick, red] (Start) -- (Big);
+            \draw[->, thick, red] (Start) -- (Big);
 
-    % B) Paso Ideal (TEAL / Verde Azulado)
-    \draw[->, thick, teal] (Start) -- (Good);
- C) Paso Pequeño (NARANJA)
-    \draw[->, thick, orange] (Start) -- (Small);
+            \draw[->, thick, teal] (Start) -- (Good);
+            \draw[->, thick, orange] (Start) -- (Small);
 
-    % Punto de Inicio
-    \addplot[mark=*, mark size=2pt] coordinates {(2,4)};
+            \addplot[mark=*, mark size=2pt] coordinates {(2,4)};
 
-    \end{axis}
-\end{tikzpicture}
-\end{center}
+            \end{axis}
+        \end{tikzpicture}
+        \end{center}
+
+    Dentro de la gráfica, la \textcolor{red}{línea roja} indica el comportamiento utilizando un step size alto.
+    Podemos ver claramente que nos movemos del punto inicial en la dirección correcta (ya que el mínimo se
+    encuentra hacia la izquierda) pero simplemente llegamos hacia ``el otro lado''. Este comportamiento
+    se repetiría, dónde estando hacia la izquierda nos moveríamos hacia la derecha con un tamaño de paso
+    idéntico llegando al punto original. Por otro lado, la línea \textcolor{teal}{teal} simboliza un learning rate ``perfecto'' iniciando
+    desde nuestro mismo punto inicial. En este caso, nos dirijimos en la dirección correcta y además la longitud de paso
+    matchea perfectamente. Por último, tenemos un learning rate bajo con la línea \textcolor{orange}{naranja}.
+    Podemos ver que nuestro paso se dirije en la dirección correcta pero claramente necesitaríamos más
+    iteraciones para llegar al mínimo que deseamos.
+
+    En resumen, un Learning Rate demasiado alto causa que oscilemos entre diferentes puntos cercanos al mínimo
+    pero sin poder acercarnos, ``saltando por encima'' del mínimo de la función error en lugar de descender
+    hacia el fondo.
+
+    \item \textit{Justifique por qué una estrategia de Learning Rate Decay ($\eta = \frac{1}{\sqrt{t}}$) solucionaría
+        este problema mejor que simplemente elegir un learning rate constante muy pequeño desde el inicio.}
+
+    Si utilizamos un Learning Rate demasiado pequeño, tenemos dos problemas principales que enfrentamos:
+
+    \begin{itemize}
+        \item \textbf{Convergencia lenta:} Si nuestro punto de inicio está lejos del mínimo (imaginemos la parte
+            alta de la curva del inciso anterior), tomar pasos diminutos significa que necesitaríamos una
+            gran cantidad de iteraciones para llegar al fondo. Básicamente, estaríamos invirtiendo recursos
+            computacionales en un aprendizaje demasiado lento.
+
+        \item \textbf{Mínimos locales:} Al dar pasos tan pequeños, perdemos la capacidad de ``saltar'' fuera
+            de pequeños valles o imperfecciones de la superficie. Es muy probable que el modelo se estanque
+            en la primera solución (buena o mala) que encuentre en lugar de buscar el mínimo global real.
+    \end{itemize}
+
+    Mientras que un Learning Rate demasiado grande presenta los problemas mencionados en el inciso anterior.
+
+    La solución a esto sería utilizar Decay, aquí obtenemos un poco de lo mejor de ambos mundos. En las etapas
+    iniciales, queremos que el modelo sea relativamente ``agresivo'' para llevarnos a la cercanía del mínimo
+    global (o algún otro mínimo suficientemente cercano, pero ese es tema aparte) en pocas iteraciones con
+    la capacidad de ``escapar'' de los mínimos locales. Mientras que, a mayor número de iteraciones buscamos dar
+    pasos más pequeños y exactos para poder continuar mejorando el rendimiento y llegar a una solución más
+    precisa.
 
 \textbf{Gradiente en Cero}
 
@@ -113,7 +146,73 @@ analice las consecuencias de las decisiones de diseño.
     Gradiente). Explique matemáticamente por qué ocurre esto al hacer Backpropagation (piense en la
     derivada máxima de la sigmoide).}
 
+    Basándonos en la forma de la función sigmoide, podemos darnos cuenta que su derivada tiene valores
+    muy bajos. Observando la siguiente gráfica:
+
+    \begin{center}
+        \begin{tikzpicture}
+            % --- GRAPH 1: SIGMOID FUNCTION ---
+            \begin{axis}[
+                name=plot1,
+                width=6cm, height=4.5cm,
+                axis lines=middle,
+                xmin=-5, xmax=5,
+                ymin=-0.1, ymax=1.1,
+                xlabel={$z$}, ylabel={$\sigma(z)$},
+                ticks=none,
+                title={\small Función Sigmoide},
+                label style={font=\footnotesize},
+                title style={yshift=0.5em}
+            ]
+                \addplot[teal, thick, domain=-5:5, samples=100] {1/(1+exp(-x))};
+                \node[teal, font=\footnotesize] at (axis cs:-2, 0.8) {$\sigma(z)$};
+            \end{axis}
+
+            % --- GRAPH 2: DERIVATIVE ---
+            \begin{axis}[
+                at={(plot1.outer east)}, anchor=outer west,
+                xshift=0.5cm,
+                width=6cm, height=4.5cm,
+                axis lines=middle,
+                xmin=-5, xmax=5,
+                ymin=0, ymax=0.3,
+                xlabel={$z$}, ylabel={$\sigma'(z)$},
+                ytick={0.25}, yticklabels={0.25},
+                title={\small Derivada},
+                label style={font=\footnotesize},
+                title style={yshift=0.5em}
+            ]
+                \addplot[orange, thick, domain=-5:5, samples=100] {exp(-x)/(1+exp(-x))^2};
+                
+                \draw[dashed, black!50] (axis cs:-5, 0.25) -- (axis cs:5, 0.25);
+            \end{axis}
+        \end{tikzpicture}
+    \end{center}
+    Podemos ver que el valor máximo de la derivada es \textbf{0.25}, dónde adicionalmente al acercarse a los
+    extremos tiene valores súmamente bajos (zona de saturación). Adicionalmente, esto también es un problema
+    ya que la función sigmoide ``aprieta'' los valores hacia el intervalo $(0,1)$. Consecuentemente, es
+    bastante probable que nuestros valores se encuentren dentro de nuestra zona de saturación.
+
+    Recordemos también que al utilizar la regla de la cadena durante \textit{Backpropagation} para calcular
+    el gradiente de las primeras capas, esencialmente estamos realizando una multiplicación continua de
+    derivadas parciales:
+
+    $$ \frac{\partial L}{\partial w_1} = \frac{\partial L}{\partial \hat{y}} \cdot \underbrace{\sigma'(z_n) \cdot w_n \cdot \dots \cdot \sigma'(z_1)}_{\text{Multiplicación de términos } \le 0.25} \cdot x $$
+
+    Si analizamos la ecuación, notamos el que estamos multiplicando repetidamente términos
+    $\sigma'(z)$. Dado que ya observamos gráficamente que el \textit{mejor} caso para estos términos es $0.25$,
+    estamos multiplicando fracciones pequeñas una y otra vez.
+
+    El resultado es que el gradiente decrece exponencialmente a medida que retrocedemos en las capas
+    (\textit{Vanishing Gradient}). Básicamente, la señal de error se diluye tanto que las primeras capas
+    jamás reciben la información necesaria para actualizar sus pesos. Adicionalmente, las primeras
+    capas de una red neuronal son clave al aprender características básicas (o features importantes en
+    otras palabras).
     \item \textit{¿Por qué la función ReLU mitiga este problema en la parte positiva del eje?}
+
+        La derivada de la función ReLU es 1 para valores positivos y 0 para valores negativos. Considerando
+        únicamente valores positivos, la ``señal'' del error se mantiene intacta a lo largo del Backpropagation
+        en comparación a la disminución exponencial utilizando la función sigmoide.
 \end{enumerate}
 
 \textbf{Capacidad del Modelo}
@@ -125,6 +224,11 @@ capas ocultas de 10 neuronas cada una (ambas tienen un número similar de parám
         \item\textit{¿Cuál de las dos tiene mayor capacidad para modelar funciones no lineales complejas y
         composicionales? ¿Por qué? Base se respuesta con lo visto en clase (``¿Por qué redes
         profundas?'').}
+
+
+
+    \end{enumerate}
+
 
     \end{enumerate}
 
