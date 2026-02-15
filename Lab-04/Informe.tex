@@ -151,7 +151,6 @@ analice las consecuencias de las decisiones de diseño.
 
     \begin{center}
         \begin{tikzpicture}
-            % --- GRAPH 1: SIGMOID FUNCTION ---
             \begin{axis}[
                 name=plot1,
                 width=6cm, height=4.5cm,
@@ -168,7 +167,6 @@ analice las consecuencias de las decisiones de diseño.
                 \node[teal, font=\footnotesize] at (axis cs:-2, 0.8) {$\sigma(z)$};
             \end{axis}
 
-            % --- GRAPH 2: DERIVATIVE ---
             \begin{axis}[
                 at={(plot1.outer east)}, anchor=outer west,
                 xshift=0.5cm,
@@ -188,7 +186,7 @@ analice las consecuencias de las decisiones de diseño.
             \end{axis}
         \end{tikzpicture}
     \end{center}
-    Podemos ver que el valor máximo de la derivada es \textbf{0.25}, dónde adicionalmente al acercarse a los
+    Podemos ver que el valor máximo de la derivada es 0.25, dónde adicionalmente al acercarse a los
     extremos tiene valores súmamente bajos (zona de saturación). Adicionalmente, esto también es un problema
     ya que la función sigmoide ``aprieta'' los valores hacia el intervalo $(0,1)$. Consecuentemente, es
     bastante probable que nuestros valores se encuentren dentro de nuestra zona de saturación.
@@ -197,22 +195,23 @@ analice las consecuencias de las decisiones de diseño.
     el gradiente de las primeras capas, esencialmente estamos realizando una multiplicación continua de
     derivadas parciales:
 
-    $$ \frac{\partial L}{\partial w_1} = \frac{\partial L}{\partial \hat{y}} \cdot \underbrace{\sigma'(z_n) \cdot w_n \cdot \dots \cdot \sigma'(z_1)}_{\text{Multiplicación de términos } \le 0.25} \cdot x $$
+
+    \[\frac{\partial L}{\partial w_1} = \frac{\partial L}{\partial \hat{y}} \cdot \sigma'(z_n) \cdot w_n \cdot \cdots \cdot \sigma'(z_1) \cdot x\]
 
     Si analizamos la ecuación, notamos el que estamos multiplicando repetidamente términos
-    $\sigma'(z)$. Dado que ya observamos gráficamente que el \textit{mejor} caso para estos términos es $0.25$,
+    $\sigma'(z)$. Dado que ya observamos gráficamente que el mejor caso para estos términos es $0.25$,
     estamos multiplicando fracciones pequeñas una y otra vez.
 
-    El resultado es que el gradiente decrece exponencialmente a medida que retrocedemos en las capas
-    (\textit{Vanishing Gradient}). Básicamente, la señal de error se diluye tanto que las primeras capas
-    jamás reciben la información necesaria para actualizar sus pesos. Adicionalmente, las primeras
-    capas de una red neuronal son clave al aprender características básicas (o features importantes en
-    otras palabras).
+    El resultado es que el gradiente decrece rápidamente a medida que retrocedemos en las capas
+    y este es el fenómeno de Vanishing Gradient. Básicamente, la señal de error se diluye tanto
+    que las primeras capas jamás reciben la información necesaria para actualizar sus pesos. Adicionalmente,
+    las primeras capas de una red neuronal son clave al aprender características básicas (o features
+    importantes en otras palabras).
     \item \textit{¿Por qué la función ReLU mitiga este problema en la parte positiva del eje?}
 
         La derivada de la función ReLU es 1 para valores positivos y 0 para valores negativos. Considerando
         únicamente valores positivos, la ``señal'' del error se mantiene intacta a lo largo del Backpropagation
-        en comparación a la disminución exponencial utilizando la función sigmoide.
+        en comparación a la disminución rápida utilizando la función sigmoide.
 \end{enumerate}
 
 \textbf{Capacidad del Modelo}
@@ -225,14 +224,29 @@ capas ocultas de 10 neuronas cada una (ambas tienen un número similar de parám
         composicionales? ¿Por qué? Base se respuesta con lo visto en clase (``¿Por qué redes
         profundas?'').}
 
+        La red neuronal de 10 capas ocultas tiene mayor capacidad, esto se debe a la ``composicionalidad''
+        de las redes neuronales profundas. 
 
+\textbf{Profundidad vs. Anchura}
 
-    \end{enumerate}
+\textit{Si comparamos una Red Neuronal con 1 capa oculta de 100 neuronas contra una Red Neuronal con 10 capas ocultas de 10 neuronas cada una (ambas tienen un número similar de parámetros).}
 
+\begin{enumerate}
+    \item \textit{¿Cuál de las dos tiene mayor capacidad para modelar funciones no lineales complejas y composicionales? ¿Por qué? Base se respuesta con lo visto en clase (``¿Por qué redes profundas?'').}
 
-    \end{enumerate}
+        La red neuronal de 10 capas (profunda) tiene una mayor capacidad para modelar funciones complejas y composicionales
+        de manera eficiente. Esta red aprovecha la jerarquía de la información.
 
+        Al tener múltiples capas, la red puede descomponer un problema complejo en sub-problemas más
+        sencillos y reutilizables. Las primeras capas aprenden características básicas y las capas
+        posteriores combinan estas características para formar conceptos más complejos o abstractos 
+        (composicionalidad). Por otro lado, la red de 1 sola capa (ancha) tiene que aprender la función global
+        ``de golpe'' y no tiene la ventaja de la composición. En otras palabras, una red ancha no puede
+        tomar ventaja de lo que fue calculado en capas anteriores cómo una red profunda y requerirían un
+        número más alto de parámetros para reproducir el comportamiento.
 
+\end{enumerate}
 
+\end{enumerate}
 
 \end{document}
