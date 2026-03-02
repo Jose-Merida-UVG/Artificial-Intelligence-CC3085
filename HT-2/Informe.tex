@@ -7,7 +7,7 @@
 \usepackage{tcolorbox}
 \usepackage{hyperref}
 
-\title{\textbf{Hoja de Trabajo 1: Agentes y Entornos} \vspace{1em}\\
+\title{\textbf{Hoja de Trabajo 2: MDP} \vspace{1em}\\
 Inteligencia Artificial - CC3085}
 \author{José Antonio Mérida Castejón}
 \date{\today}
@@ -31,10 +31,22 @@ para) la propiedad de Markov si el juego es verdaderamente aleatorio. ¿Qué inf
 crítica incluir en el estado s para que el MDP sea válido?}
 \end{itemize}
 
-La propiedad de Markov funciona dado que los eventos son independientes, dónde el resultado de tomar
-una decisión o llevar a cabo una acción depende únicamente del estado actual en el que estamos. Es decir,
-el pasado pudo habernos llevado al estado actual, pero sin importar como nosotros hayamos llegado 
-únicamente importa la situación actual.
+\noindent La Propiedad de Markov establece que el futuro es independiente del pasado, dado el presente. Matemáticamente, esta propiedad se cumple
+cuando la distribución de probabilidad del siguiente estado depende únicamente del estado y acción actuales. En un juego realmente
+aleatorio (eventos independientes), incluir el historial de victorias es irrelevante dado que no es necesario para computar la función
+de transición o la función de recompensa. 
+
+\vspace{0.5em}
+
+\noindent Para que el MDP sea válido, la información crítica que debe incluirse en el estado $s$ es:
+\begin{itemize}
+    \item \textbf{Posibles Acciones:} Las acciones válidas disponibles que puede realizar el agente estando en el estado $s$.
+    
+    \item \textbf{Resultados de las Acciones:} La distribución de probabilidad de transición hacia los estados sucesores dadas cada
+      una de las acciones, al igual que el reward obtenido de cada una de etas transiciones.
+    
+    \item \textbf{Condición de Parada:} Si el estado indica que se debe parar, puede ser una meta o algún estado de ``game over''.
+\end{itemize}
 
 \subsection*{El Dilema del Factor Descuento ($\gamma$)}
 \noindent\textit{Considere lo visto en clase y además tome en cuenta dos escenarios.}
@@ -47,33 +59,92 @@ el pasado pudo habernos llevado al estado actual, pero sin importar como nosotro
 \textit{Con ello responda:}
 
 \begin{itemize}
-  \item \textit{¿Qué valor de γ (cercano a 0 o cercano a 1) asignaría a cada escenario? Justifique su respuesta
-explicando cómo el valor de γ afecta la "impaciencia" o "visión a largo plazo" del agente y las
-consecuencias de elegir el valor incorrecto para cada caso.}
+  \item \textit{¿Qué valor de $\gamma$ (cercano a 0 o cercano a 1) asignaría a cada escenario? Justifique su respuesta
+  explicando cómo el valor de $\gamma$ afecta la ``impaciencia'' o ``visión a largo plazo'' del agente y las
+  consecuencias de elegir el valor incorrecto para cada caso.}
 \end{itemize}
 
-Cada uno de estos ejemplos presenta un extremo en cuanto a prioridad de eventos \textit{cercanos} vs
-\textit{a futuro}. En en \textbf{Escenario A}, el tiempo es clave y el priorizar alcanzar a una alta
-cantidad de gente puede resultar en evitar el rescate de personas que se encuentren en una 
-situación menos peligrosa. Si priorizamos beneficios tardíos, estaríamos entrenando al robot para
-salvar personas que ya no pueden ser salvadas. Por otro lado, en el \textbf{Escenario B} debemos
-utilizar el \textit{approach} contrario. Aquí deberíamos de priorizar los retornos a largo plazo, ya 
-que de momento no nos es útil en lo absoluto beneficiarnos hasta que el fondo de pensiones se
-ponga en uso.
+\noindent Para el \textit{Escenario A}, se debe asignar un valor de $\gamma$ cercano a 0. Esto convierte al agente en un individuo 
+``impaciente'', priorizando recompensas inmediatas sobre las futuras. En una situación de emergencia, el tiempo es un recurso crítico y
+el robot debe de priorizar rescatar a la persona que tenga en frente \textit{ahora}. En este entorno, contamos con incertidumbre y
+realmente no podemos tomar en cuenta factores como colapso del edificio o situaciones imprevistas dentro del modelado. Entonces, es 
+absolutamente necesario priorizar las recompensas inmediatas.
+
+\vspace{0.5em}
+
+\noindent Si usáramos un $\gamma \approx 1$, el robot podría ignorar víctimas inmediatas buscando una ruta
+para salvar a un grupo mayor en una habitación lejana. En lo que el robot llega a esta habitación, puede que ya no sea posible
+rescatar a este grupo mayor ya sea por un colapso u otro evento imprevisto.
+
+\vspace{0.5em}
+
+\noindent Para el \textit{Escenario B}, se requiere un valor de $\gamma$ cercano a 1. Este ajuste le da al agente 
+``visión a largo plazo'', permitiéndole valorar casi por igual un beneficio futuro que uno presente. Dado que el objetivo es
+la solvencia tras 30 años, el agente debe ser capaz de sacrificar beneficios instantáneos por situaciones favorables a futuro.
+
+\vspace{0.5em}
+
+\noindent Si usáramos un $\gamma \approx 0$, el agente priorizaría ganancias rápidas y volátiles que ignoran la estabilidad a 30
+años. Aquí tendríamos fondos de jubilación insuficientes, \textit{porque el bot decidió invertir todo el crypto}.
 
 \subsection*{Políticas Estocásticas vs Deterministas}
-\textit{Considere que durante la clase dijimos que una solución es una política $\pi(s)$. Con eso en mente responda:}
+\noindent\textit{Considere que durante la clase dijimos que una solución es una política $\pi(s)$. Con eso en mente responda:}
 
 \begin{enumerate}
-  \item\textit{Si el entorno es estocástico (mis acciones fallan a veces), ¿necesito una política estocástica (que a
-    veces elija A y a veces B para el mismo estado) para ser óptimo, o basta con una política
-  determinista? Justifique su respuesta basándose en la ecuación de Bellman para $V_{opt}$}
+  \item\textit{Si el entorno es estocástico (mis acciones fallan a veces), ¿necesito una política estocástica (que a veces elija A y a veces B para el mismo estado) para ser óptimo, o basta con una política determinista? Justifique su respuesta basándose en la ecuación de Bellman para $V_{opt}$.}
 
-  No es necesario emplear una política estocástica, en este caso se evalúa el retorno \textit{esperado}
-  de tomar una acción determinada en un estado determinado. Por ejemplo, si tuviésemos una elección
-  de tirar una moneda y ganar $Q50,000$ en cara y perder $Q5$ en cruz o simplemente no tirarla. No
-  sería lógico para cualquier persona razonable evitar tirar la moneda, \textit{``Como hay veces
-  que pierdo $Q5$, esta vez no la voy a tirar''} - nadie nunca.
+  No es necesario emplear una política estocástica, basta con una política determinista. La razón es que la
+  Ecuación de Optimidad de Bellman no evalúa resultados aislados, sino que calcula el valor esperado de cada acción disponible en
+  un estado. 
+
+  Aunque el entorno sea incierto y las acciones fallen, cada opción tiene un promedio de recompensa a largo plazo bien definido.
+  La política óptima simplemente identifica qué acción ofrece el mayor valor esperado y la elige. No hay
+  incentivo matemático para ``variar'' entre la mejor opción y otras inferiores solo porque el entorno sea estocástico. Si una acción
+  es estadísticamente superior a las demás, la política determinista simplemente dicta elegir esa mejor opción el 100\% de las
+  veces.
+
+  Bajo este criterio, no tiene sentido evitar una elección que en promedio nos beneficia. Si tuviésemos una elección de tirar una
+  moneda y ganar $Q50,000$ en cara y perder $Q5$ en cruz o simplemente no tirarla, el valor esperado de jugar es tener una alta
+  ganancia. No sería lógico para cualquier persona razonable evitar tirar la moneda bajo el argumento:
+
+  \begin{center}
+  \textit{``Como hay veces que pierdo $Q5$, esta vez no la voy a tirar''} --- dijo nadie nunca (espero).
+  \end{center}
 \end{enumerate}
+
+\subsection*{Recompensas Negativas (Living Penalty)}
+\noindent\textit{En el diseño de GridWorlds, a menudo se añade una pequeña recompensa negativa (ej. 0.01) por cada
+paso que el agente da (living penalty). Con esto responda:}
+
+\begin{itemize}
+  \item \textit{¿Cómo cambia el comportamiento del agente si eliminamos este castigo (reward = 0 por paso) versus
+    si lo hacemos muy grande (reward = -10 por paso)? Describa el cambio en la estrategia de riesgo del agente}
+\end{itemize}
+
+\noindent La magnitud del castigo por paso define qué tan dispuesto está el agente a ``arriesgarse'' para conseguir una recompensa
+en función del tiempo (o pasos dados).
+
+\vspace{0.5em}
+
+\noindent En el caso que el castigo sea nulo ($r = 0$), el agente tiene \textit{paciencia infinita}. Si no tenemos un costo por el paso del tiempo,
+el agente no tiene incentivo alguno para buscar la salida de manera \textit{rápida}. Si el entorno tiene peligros, el agente siempre
+tomará una ruta más larga pero segura con tal de eivtarlos. Tomando como ejemplo los resultados del \textit{Task 2} del laboratorio, hay
+situaciones dónde el agente prefiere caminar ``contra la pared'' y eventualmente resbalarse hacia dónde tenía la intención de ir originalmente
+con tal de evitar los riesgos. En este caso es una política \textit{inteligente}, pero puede que este tipo de soluciones no se adecúen al
+problema que estamos intentando de resolver.
+
+\vspace{0.5em}
+
+\noindent En el caso que el castigo sea muy alto ($r = -10$), el agente inmediatamente \textit{entra en pánico} buscando terminar. Podríamos
+decir que nuestro agente no le teme a absolutamente nada, cruzando por caminos llenos de obstáculos peligrosos con tal de finalizar rápido.
+Ya que, puede que la penalización por \textit{morir} el 99\% de las veces en el primer paso sea menor que la penalización por dar pasos adicionales.
+
+\vspace{0.5em}
+
+\noindent En resumen, este valor de recompensa debe de ser seleccionado con mucha atención para poder buscar una solución óptima a nuestro
+problema. Realmente, el agente soluciona el problema que \textit{nosotros} le proporcionamos y para el cual nosotros establecemos \textit{guidelines}.
+A simple vista, nos podrían parecer decisiones absurdas cruzarse un campo minado con tal de ahorrarnos 2 pasos o desviarnos 50km por
+evitar un pequeño hoyo en la carretera. Sin embargo, estas pueden ser soluciones \textit{óptimas} al problema que nosotros planteamos
+si no utilizamos un \textit{living penalty} adecuado.
 
 \end{document}
