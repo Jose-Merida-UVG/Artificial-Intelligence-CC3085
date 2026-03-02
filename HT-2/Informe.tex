@@ -1,0 +1,79 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+\title{\textbf{Hoja de Trabajo 1: Agentes y Entornos} \vspace{1em}\\
+Inteligencia Artificial - CC3085}
+\author{José Antonio Mérida Castejón}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Task 1: Teoría}
+\noindent\textit{Responda con criterio y análisis de ingenierx. No se esperan definiciones de libro, sino que analice las
+consecuencias de las decisiones de diseño.}
+
+\subsection*{La Falacia del Jugador y la Propiedad de Markov}
+\noindent\textit{Durante la clase definimos que un MDP cumple con la propiedad de Markov. Con esto en mente
+ considere que usted está diseñando un agente para jugar Blackjack. Un ``experto'' le dice que debe
+ incluir en el estados el historial de las últimas 10 manos ganadas/perdidas porque ``si ha perdido
+ 10 veces seguidas, le toca ganar''. Con esto responda}
+
+ \begin{itemize}
+ \item\textit{Explique matemáticamente por qué incluir el historial de victorias pasadas viola (o es irrelevante
+para) la propiedad de Markov si el juego es verdaderamente aleatorio. ¿Qué información sí es
+crítica incluir en el estado s para que el MDP sea válido?}
+\end{itemize}
+
+La propiedad de Markov funciona dado que los eventos son independientes, dónde el resultado de tomar
+una decisión o llevar a cabo una acción depende únicamente del estado actual en el que estamos. Es decir,
+el pasado pudo habernos llevado al estado actual, pero sin importar como nosotros hayamos llegado 
+únicamente importa la situación actual.
+
+\subsection*{El Dilema del Factor Descuento ($\gamma$)}
+\noindent\textit{Considere lo visto en clase y además tome en cuenta dos escenarios.}
+
+\begin{itemize}
+  \item\textbf{Escenario A:} Un robot de rescate en un edificio en llamas.
+  \item\textbf{Escenario B:} Un agente de inversión para un fondo de pensiones a 30 años.
+\end{itemize}
+
+\textit{Con ello responda:}
+
+\begin{itemize}
+  \item \textit{¿Qué valor de γ (cercano a 0 o cercano a 1) asignaría a cada escenario? Justifique su respuesta
+explicando cómo el valor de γ afecta la "impaciencia" o "visión a largo plazo" del agente y las
+consecuencias de elegir el valor incorrecto para cada caso.}
+\end{itemize}
+
+Cada uno de estos ejemplos presenta un extremo en cuanto a prioridad de eventos \textit{cercanos} vs
+\textit{a futuro}. En en \textbf{Escenario A}, el tiempo es clave y el priorizar alcanzar a una alta
+cantidad de gente puede resultar en evitar el rescate de personas que se encuentren en una 
+situación menos peligrosa. Si priorizamos beneficios tardíos, estaríamos entrenando al robot para
+salvar personas que ya no pueden ser salvadas. Por otro lado, en el \textbf{Escenario B} debemos
+utilizar el \textit{approach} contrario. Aquí deberíamos de priorizar los retornos a largo plazo, ya 
+que de momento no nos es útil en lo absoluto beneficiarnos hasta que el fondo de pensiones se
+ponga en uso.
+
+\subsection*{Políticas Estocásticas vs Deterministas}
+\textit{Considere que durante la clase dijimos que una solución es una política $\pi(s)$. Con eso en mente responda:}
+
+\begin{enumerate}
+  \item\textit{Si el entorno es estocástico (mis acciones fallan a veces), ¿necesito una política estocástica (que a
+    veces elija A y a veces B para el mismo estado) para ser óptimo, o basta con una política
+  determinista? Justifique su respuesta basándose en la ecuación de Bellman para $V_{opt}$}
+
+  No es necesario emplear una política estocástica, en este caso se evalúa el retorno \textit{esperado}
+  de tomar una acción determinada en un estado determinado. Por ejemplo, si tuviésemos una elección
+  de tirar una moneda y ganar $Q50,000$ en cara y perder $Q5$ en cruz o simplemente no tirarla. No
+  sería lógico para cualquier persona razonable evitar tirar la moneda, \textit{``Como hay veces
+  que pierdo $Q5$, esta vez no la voy a tirar''} - nadie nunca.
+\end{enumerate}
+
+\end{document}
