@@ -11,7 +11,6 @@
 \usepackage{parskip}
 \usepackage{pgfplots}
 \usetikzlibrary{arrows.meta}
-
 \pgfplotsset{compat=1.18}
 \lstset{
     language=Python,
@@ -27,8 +26,7 @@
     showstringspaces=false,
     tabsize=4
 }
-
-\title{\textbf{Laboratorio 5: Reinforcement Learning } \vspace{1em}\\
+\title{\textbf{Laboratorio 5: Reinforcement Learning} \vspace{1em}\\
 Inteligencia Artificial - CC3085}
 \author{José Antonio Mérida Castejón}
 \date{\today}
@@ -40,67 +38,77 @@ Inteligencia Artificial - CC3085}
 consecuencias de las decisiones de diseño.}
 
 \subsection*{El Dilema del Restaurante}
-
 \textit{Considere lo que se habló en clase sobre Exploración y Explotación. Además considere que usted llega a una
 ciudad nueva por 30 días. Hay 50 restaurantes. El primer día va al Restaurante A y la comida es excelente
 (Reward = 10). Con esto en mente responda:}
 
-\begin{itemize}
+\begin{itemize}[leftmargin=*, itemsep=0.8em]
 
-\item\textit{Si usted fuera un agente ``Greedy'' (Codicioso), ¿qué haría los 29 días restantes? ¿Por qué esta
+\item \textit{Si usted fuera un agente ``Greedy'' (Codicioso), ¿qué haría los 29 días restantes? ¿Por qué esta
     estrategia podría ser sub-óptima a largo plazo?}
 
-    \noindent Si fuésemos un agente \textit{greedy}, la decisión sería de ir al \textit{Restaurante A} los 29 días restantes. Si ya visitamos
-    un restaurante bastante bueno, no tendríamos razón alguna para arriesgarnos y potencialmente ir a un restaurante malo los días que restan. Esta
-    estrategia puede llegar a ser subóptima, ya que realmente jamás exploramos la ciudad y es posible que encontremos mejores restaurantes. Si
-    decidiéramos explorar más (y ser \textit{menos greedy}), puede que el restaurante vecino tenga una comida \textit{excepcional (Reward = 100)}.
+    Si fuésemos un agente \textit{greedy}, la decisión sería ir al \textit{Restaurante A} los 29 días restantes.
+    Ya visitamos un restaurante bastante bueno, así que no tendríamos razón para arriesgarnos a uno malo con los
+    días que nos restan. Esta estrategia puede volverse \textbf{sub-óptima} porque jamás exploramos la ciudad,
+    es perfectamente posible que el restaurante vecino tenga una comida \textit{excepcional (Reward = 100)} y
+    nunca lo sabremos.
 
-\item\textit{Si implementa una estrategia $\epsilon-Greedy$ con $\epsilon = 0.1$, ¿cómo cambiaría su comportamiento? ¿Qué
-    riesgo corre ahora?}
+\item \textit{Si implementa una estrategia $\epsilon$-Greedy con $\epsilon = 0.1$, ¿cómo cambiaría su comportamiento?
+    ¿Qué riesgo corre ahora?}
 
-    En este caso, decidiríamos explorar los demás restaurantes en la ciudad. Con un valor de $\epsilon = 0.1$, 1 de cada diez veces dejaríamos de
-    visitar el mejor restaurante hasta el momento para tomar una acción aleatoria (explorar algún otro). Aquí corremos el riesgo que el primer restaurante
-    al que hayamos ido sea el mejor en general, dónde cada una de las veces que decidamos explorar vamos a estar tomando una decisión sub-óptima y 
-    obteniendo rewards menores por explorar. En la práctica, es importante balancear los \textit{trade-offs} de exploración vs explotación cuando tenemos
-    una situación dónde no tenemos visibilidad global del ambiente. Si tuviésemos esta información, el problema se vuelve trivial al visitar el restaurante
-    con un mayor reward pero los entornos de la vida real no siempre cumplen esta propiedad.
+    Con $\epsilon = 0.1$, 1 de cada 10 veces dejaríamos de visitar el mejor restaurante conocido para tomar una
+    acción aleatoria y explorar otro. El riesgo que corremos aquí es el contrario, si el \textit{Restaurante A}
+    resulta ser el mejor de la ciudad, cada vez que exploremos estaremos tomando una decisión sub-óptima y
+    obteniendo un reward menor de forma innecesaria.
+
+    En la práctica, es importante balancear los \textit{trade-offs} de \textbf{exploración vs.\ explotación}
+    cuando no tenemos visibilidad global del ambiente. Si la tuviésemos, el problema sería trivial, pero los
+    entornos reales no siempre cumplen esa propiedad.
 
 \end{itemize}
 
-\subsection*{Aprendizaje On-Policy vs Off-Policy}
-
-\textit{Considere lo dicho sobre las formas de aprendizaje on vs off policy que se habló en clase. Considere con
+\subsection*{Aprendizaje On-Policy vs.\ Off-Policy}
+\textit{Considere lo dicho sobre las formas de aprendizaje on vs.\ off policy que se habló en clase. Considere con
 esto el escenario donde un robot está aprendiendo a caminar, con cada una de estas formas:}
 
-\begin{itemize}
-\item\textit{Caso SARSA (On-Policy): El robot aprende basándose en los movimientos torpes que realmente hace
+\begin{itemize}[leftmargin=*]
+\item \textit{Caso SARSA (On-Policy): El robot aprende basándose en los movimientos torpes que realmente hace
     mientras explora (incluyendo cuando se cae).}
-
-\item\textit{Caso Q-Learning (Off-Policy): El robot aprende asumiendo que en el futuro siempre tomará la mejor
-    decisión posible (aunque ahora se esté cayendo por explorar)}
+\item \textit{Caso Q-Learning (Off-Policy): El robot aprende asumiendo que en el futuro siempre tomará la mejor
+    decisión posible (aunque ahora se esté cayendo por explorar).}
 \end{itemize}
 
 \noindent\textit{Responda:}
 
-\begin{itemize}
-\item\textit{Si el entorno es muy peligroso (ej: un robot caminando al borde de un precipicio), ¿cuál algoritmo es más ``seguro'' durante el
-    entrenamiento y por qué? (Hint: Piense en quién penaliza más la exploración riesgosa).}
+\begin{itemize}[leftmargin=*, itemsep=0.8em]
+
+\item \textit{Si el entorno es muy peligroso (ej: un robot caminando al borde de un precipicio), ¿cuál algoritmo
+    es más ``seguro'' durante el entrenamiento y por qué? (Hint: Piense en quién penaliza más la exploración riesgosa).}
+
+    \textit{SARSA} sería la elección más segura en este caso. Al ser \textbf{on-policy}, evalúa la política que
+    está siguiendo activamente, lo que incluye las acciones exploratorias y sus penalizaciones reales. Esto hace
+    que el agente aprenda a esquivar los estados peligrosos porque ya los vivió y los incorporó a su política.
+
+    \textit{Q-Learning}, en cambio, es \textbf{off-policy}. Asume que continuará por la ruta óptima en el futuro,
+    ignorando el costo real de explorar cerca del precipicio.
+
 \end{itemize}
 
-El algoritmo \textit{SARSA} sería la elección óptima en este caso, esto se debe a que este algoritmo evalúa la poliza que está activamente siguiendo.
-Por otro lado, \textit{Q-Learning} asume que continúa a lo largo de la ruta óptima.
 \subsection*{Bootstrapping}
-\textit{En clase mencionamos el término ``Bootstrapping'', repsonda:}
+\textit{En clase mencionamos el término ``Bootstrapping'', responda:}
 
-\begin{itemize}
-    \item\textit{Explique en sus propias palabras (sin fórmulas) qué significa que un algoritmo actualice sus estimaciones basándose
-        en otras estimaciones en lugar de esperar al final del episodio (como monte carlo). ¿por qué esto es vital para tareas continuas
-        que nunca terminan (como el control de temperatura de un servidor)?}
+\begin{itemize}[leftmargin=*, itemsep=0.8em]
+
+\item \textit{Explique en sus propias palabras (sin fórmulas) qué significa que un algoritmo actualice sus
+    estimaciones basándose en otras estimaciones en lugar de esperar al final del episodio (como Monte Carlo).
+    ¿Por qué esto es vital para tareas continuas que nunca terminan (como el control de temperatura de un servidor)?}
+
+    Explicado con una analogía, el proceso de \textit{bootstrapping} es como corregir el rumbo mientras manejamos
+    en lugar de esperar un choque para darse cuenta de que algo salió mal. Esto es clave para tareas continuas,
+    donde no hay un ``punto final'' desde el cual hacer una retrospectiva del \textit{performance}. En el ejemplo
+    del servidor, la tarea nunca finaliza y no podemos esperar a que el servidor se queme para hacer un
+    \textit{recap} de que tal funcionó el agente.
+
 \end{itemize}
-
-Explicado mediante una analogía, el proceso de \textit{bootstrapping} es como corregir el rumbo mientras se va manejando en lugar de esperar
-un choque para darse cuenta que algo salió mal. Esto es clave para tareas continuas, dónde no tenemos un ``punto final'' dónde podamos finalizar
-y tener una retrospectiva del \textit{performance} a lo largo del task. En el ejemplo del servidor, la tarea realmente nunca finaliza y si
-fuésemos a actualizar al finalizar la tarea estaríamos quemando múltiples servidores antes de corregir el comportamiento riesgoso.
 
 \end{document}
