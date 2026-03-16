@@ -1,5 +1,9 @@
 # Lab 6: Minimax & Adversarial Search
 
+## Video Demo
+
+Watch the agent in action: **[Connect Four AI Demo](https://youtu.be/wat_djyqZK4)**
+
 ## Summary
 
 This assignment explores adversarial search and game-playing AI through both theoretical analysis and practical implementation of a Connect Four agent using the Minimax algorithm with Alpha-Beta pruning.
@@ -55,10 +59,6 @@ This 16.3× speedup enables the agent to search 2 plies deeper in the same time 
 The asymmetric defensive priority (-80 vs. +50) implements "paranoid conservatism" — blocking opponent threats is more urgent than creating redundant winning opportunities. This reflects game theory: one opponent win ends the game; multiple own winning lines don't compound.
 
 **Strategic Insight**: At depth 6, the agent frequently makes counter-intuitive opening moves (e.g., moving left into the wall) because with `is_slippery=False` in Connect Four, the deterministic physics allow precise setup of winning forks 5-6 moves ahead. Against intermediate human players, the agent wins consistently by forcing the opponent into zugzwang-like positions where all moves lead to defeat.
-
-## Video Demo
-
-Watch the agent in action: **[Connect Four AI Demo](https://youtu.be/wat_djyqZK4)**
 
 ## Execution
 
