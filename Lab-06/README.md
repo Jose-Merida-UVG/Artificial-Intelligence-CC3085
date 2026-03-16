@@ -14,17 +14,15 @@ This assignment explores adversarial search and game-playing AI through both the
 
 ## Deliverables
 
-| File | Description |
-| :--- | :---------- |
-| `Informe.pdf` | Written report covering Minimax complexity analysis, Alpha-Beta effectiveness, and evaluation function design. |
-| `Informe.tex` | Original LaTeX source for the report. |
+| File                | Description                                                                                                          |
+| :------------------ | :------------------------------------------------------------------------------------------------------------------- |
+| `Informe.pdf`       | Written report covering Minimax complexity analysis, Alpha-Beta effectiveness, and evaluation function design.       |
+| `Informe.tex`       | Original LaTeX source for the report.                                                                                |
 | `ConnectFour.ipynb` | Jupyter notebook with three tasks: game logic & Minimax, Alpha-Beta pruning, and strategic heuristic implementation. |
-| `app.py` | Streamlit web application for interactive gameplay with agent vs. human and agent vs. random modes. |
-| `connect4_game.py` | Core game logic: 6×7 board representation, move validation, win detection, and terminal state checking. |
-| `agent.py` | Agent implementations: `RandomAgent`, `MinimaxAgent`, `AlphaBetaAgent`, and `MyAgent` wrapper. |
-| `README.md` | Quick start guide with installation instructions and agent customization methods. |
-| `CHANGES.md` | Detailed UI/UX evolution documentation from emoji-heavy to minimal professional design. |
-| `trained_agent.pkl` | Serialized AlphaBetaAgent (depth=5) exported from notebook for direct loading in Streamlit. |
+| `app.py`            | Streamlit web application for interactive gameplay with agent vs. human and agent vs. random modes.                  |
+| `connect4_game.py`  | Core game logic: 6×7 board representation, move validation, win detection, and terminal state checking.              |
+| `agent.py`          | Agent implementations: `RandomAgent`, `MinimaxAgent`, `AlphaBetaAgent`, and `MyAgent` wrapper.                       |
+| `README.md`         | Quick start guide with installation instructions and agent customization methods.                                    |
 
 > The Streamlit app (`app.py`) provides the best demonstration of the agent's capabilities. The notebook contains the step-by-step implementation and performance analysis.
 
@@ -40,14 +38,15 @@ This assignment explores adversarial search and game-playing AI through both the
 
 **Alpha-Beta Pruning Efficiency** (depth=4, empty board):
 
-| Algorithm | Nodes Explored | Reduction |
-| :-------- | :------------- | :-------- |
-| Pure Minimax | ~2,800 | — |
-| Alpha-Beta | ~172 | **93.86%** |
+| Algorithm    | Nodes Explored | Reduction  |
+| :----------- | :------------- | :--------- |
+| Pure Minimax | ~2,800         | —          |
+| Alpha-Beta   | ~172           | **93.86%** |
 
 This 16.3× speedup enables the agent to search 2 plies deeper in the same time budget — a critical advantage in real-time gameplay.
 
 **Heuristic Evaluation Function** — Scores positions across 69 possible 4-cell windows:
+
 - **Center column preference**: +6 per piece (column 3 participates in the most winning lines)
 - **Threat detection**: Own 3-in-a-row with empty space (+50), opponent 3-in-a-row (-80)
 - **Development potential**: Own 2-in-a-row with 2 empty (+10), opponent 2-in-a-row (-15)
@@ -75,10 +74,6 @@ jupyter notebook ConnectFour.ipynb
 ```
 
 **Game Modes**:
+
 - **Play vs Agent**: Human (red) vs. AI (yellow) — click column buttons to drop pieces
 - **Watch: Agent vs Random**: Automated showcase with auto-play and step-through controls
-
-**Agent Customization**: Three methods to implement custom agents:
-1. Edit the `MyAgent` class in `agent.py` directly
-2. Train a model in the notebook, pickle it, and load it in `app.py`
-3. Convert your notebook implementation to a Python module and import it
