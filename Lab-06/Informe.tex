@@ -1,0 +1,174 @@
+\documentclass[11pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows.meta}
+\pgfplotsset{compat=1.18}
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    columns=flexible,
+    keepspaces=true,
+    commentstyle=\color{gray}\itshape,
+    keywordstyle=\color{blue!70!black}\bfseries,
+    stringstyle=\color{green!40!black},
+    frame=L,
+    xleftmargin=2em,
+    showstringspaces=false,
+    tabsize=4
+}
+\title{\textbf{Laboratorio 6: Minimax \& Adversarial Search} \vspace{1em}\\
+Inteligencia Artificial - CC3085}
+\author{José Antonio Mérida Castejón}
+\date{\today}
+\begin{document}
+\maketitle
+
+\subsection*{Task 1 - Teoría}
+\textit{Responda con criterio y análisis de ingenierx. No se esperan definiciones de libro, sino que analice las
+	consecuencias de las decisiones de diseño, haciendo que sus respuestas tengan justificación técnica y análisis crítico.}
+
+\subsection*{La Explosión Combinatoria}
+\textit{Durante la clase se mencionó que la complejidad de Minimax es $O(b^d)$. Con esto en mente considere un
+	juego con un factor de ramificación promedio $b=30$ (como el ajedrez). Si su computadora puede analizar 1 millón
+	de nodos por segundo, responda:}
+
+\begin{itemize}[leftmargin=*, itemsep=0.8em]
+
+	\item \textit{¿Cuánto tiempo le tomaría explorar el árbol completo hasta una profundidad de $d = 6$ turnos? ¿Y
+		      hasta $d = 10$?}
+
+	      Para calcular el tiempo de exploración, necesitamos determinar el número total de nodos a visitar. Con una
+	      complejidad de $O(b^d)$ y un factor de ramificación $b=30$, tenemos:
+
+	      \textbf{Para $d = 6$:}
+	      \begin{align*}
+		      \text{Nodos totales} & = 30^6 = 729,000,000 \text{ nodos}                                                   \\
+		      \text{Tiempo}        & = \frac{729,000,000}{1,000,000} = 729 \text{ segundos} \approx 12.15 \text{ minutos}
+	      \end{align*}
+
+	      \textbf{Para $d = 10$:}
+	      \begin{align*}
+		      \text{Nodos totales} & = 30^{10} = 590,490,000,000,000 \text{ nodos}                                                    \\
+		      \text{Tiempo}        & = \frac{590,490,000,000,000}{1,000,000} = 590,490,000 \text{ segundos} \approx 18.7 \text{ años}
+	      \end{align*}
+
+	      Podemos ver que el tiempo crece de manera \textbf{exponencial}. Mientras que para $d=6$ tendríamos que esperar
+	      unos 12 minutos (tal vez aceptable), para $d=10$ necesitaríamos casi 19 años. Básicamente, cada nivel adicional
+	      multiplica el tiempo por un factor de 30, lo cual hace que el problema escale de forma absolutamente inviable
+	      para profundidades mayores.
+
+	\item \textit{Basado en estos números, explique por qué Minimax puro es inviable para juegos complejos y por
+		      qué la Poda Alfa-Beta no es solo una ``mejora'', sino una necesidad absoluta.}
+
+	      Los números anteriores demuestran por qué \textit{Minimax} puro es completamente \textbf{inviable} en la práctica.
+	      Incluso con hardware moderno que procesa un millón de nodos por segundo, la explosión combinatoria nos obliga
+	      a esperar años para evaluar jugadas a profundidades razonables. En un juego real de ajedrez, donde los jugadores
+	      deben responder en minutos (o incluso segundos), esto simplemente no es aceptable.
+
+	      La \textbf{Poda Alfa-Beta} es una necesidad para
+	      hacer que estos algoritmos sean utilizables. En el mejor caso, Alfa-Beta reduce la complejidad de $O(b^d)$ a
+	      $O(b^{d/2})$. Esto significa que para nuestro ejemplo con $b=30$ y $d=10$, en lugar de explorar $30^{10}$ nodos,
+	      podríamos explorar aproximadamente $30^5 = 24,300,000$ nodos, reduciendo el tiempo de 19 años a unos 24 segundos.
+
+	      Adicionalmente, es importante mencionar que sin poda, estaríamos desperdiciando recursos computacionales en
+	      ramas del árbol que \textit{jamás} influirán en la decisión final. Si ya sabemos que una jugada nos lleva a
+	      perder, no tiene sentido explorar todas las variantes de esa pérdida. Alfa-Beta aprovecha esta observación
+	      para descartar subárboles completos de forma segura, sin sacrificar la optimalidad de la solución.
+
+	      En resumen, la diferencia entre usar Minimax puro y Alfa-Beta es la diferencia entre tener un algoritmo
+	      teóricamente correcto pero prácticamente inútil, y tener una herramienta que realmente puede jugar ajedrez
+	      a nivel competitivo.
+
+\end{itemize}
+
+\subsection*{Horizonte y Función de Evaluación}
+\textit{Recuerde lo que se ha hablado durante la clase. Considere que en un juego real, rara vez llegamos a un nodo
+	terminal (Game Over) durante la búsqueda. Cortamos la búsqueda en una profundidad $d_{max}$ y usamos una
+	función heurística Eval(s). Responda:}
+
+\begin{itemize}[leftmargin=*, itemsep=0.8em]
+
+	\item \textit{Si su función Eval(s) es perfecta (devuelve el valor real minimax), ¿qué profundidad $d$ necesita
+		      explorar para jugar perfectamente?}
+
+	      Si nuestra función de evaluación fuese \textbf{perfecta}, necesitaríamos explorar únicamente $d = 1$ (un solo
+	      nivel de profundidad). 
+
+	      Una función $Eval(s)$ perfecta, por definición, nos devuelve el \textit{valor minimax real} de cualquier estado.
+	      Básicamente, nos dice ``si juego perfectamente desde este punto, este es el resultado final que obtendré''. Si
+	      tenemos esta capacidad de ``ver el futuro'', no necesitamos simularlo porque la función ya lo hizo por
+	      nosotros.
+
+	      En términos prácticos, simplemente generamos todos los estados sucesores inmediatos (las posibles jugadas que
+	      podemos hacer ahora), evaluamos cada uno con nuestra función perfecta, y elegimos la jugada que nos lleva al
+	      estado con el mejor valor. No necesitamos ver más allá porque $Eval(s)$ ya consideró todas las consecuencias
+	      futuras de cada decisión.
+
+	      Por supuesto, el problema real es que esta función perfecta \textit{no existe} en juegos complejos. Si la
+	      tuviésemos, resolver el juego sería trivial. La complejidad surge precisamente porque nuestras heurísticas
+	      son imperfectas y necesitamos compensar su falta de precisión explorando más profundo en el árbol de juego.
+
+	\item \textit{Si su función Eval(s) es muy mala (casi aleatoria), ¿ayuda de algo aumentar la profundidad de
+		      búsqueda? Justifique su respuesta explicando la relación entre la calidad de la heurística y la
+		      profundidad de búsqueda.}
+
+	      Cuando nuestra función $Eval(s)$ es muy mala (casi aleatoria), aumentar la profundidad de búsqueda nos permite
+	      \textbf{retrasar el punto} en el que dependemos de esa evaluación poco confiable. Si exploramos más profundo,
+	      es más probable que alcancemos estados terminales reales (victorias, derrotas, empates) donde no necesitamos
+	      la heurística en absoluto porque el resultado es definitivo.
+
+
+	      Existe una relación de \textit{trade-off} entre la calidad de la heurística y la profundidad
+	      necesaria. Una heurística excelente nos permite jugar bien con poca profundidad (eficiente). Una heurística
+	      mala requiere profundidad extrema para compensar (costoso e ineficiente). La solución práctica siempre es
+	      invertir en \textbf{diseñar mejores heurísticas} en lugar de simplemente aumentar la profundidad
+	      indiscriminadamente.
+
+\end{itemize}
+
+\subsection*{Adversarios Irracionales}
+\textit{El algoritmo Minimax asume que el oponente juega de manera óptima. Responda:}
+
+\begin{itemize}[leftmargin=*, itemsep=0.8em]
+
+	\item \textit{¿Qué sucede si su oponente es un novato que comete errores graves? ¿Minimax aprovechará esos
+		      errores para ganar más rápido, o simplemente jugará de manera conservadora para asegurar su
+		      victoria mínima garantizada?}
+
+	      \textit{Minimax} jugará de manera \textbf{conservadora} y \textit{no} aprovechará los errores del oponente
+	      para ganar más rápido. Esto se debe a la suposición fundamental del algoritmo: asume que el oponente siempre
+	      toma la mejor decisión posible desde su perspectiva.
+
+	      Pensemos en un ejemplo concreto. Supongamos que Minimax tiene dos opciones:
+	      \begin{itemize}
+		      \item \textbf{Jugada A:} Garantiza victoria en 10 turnos contra un oponente perfecto
+		      \item \textbf{Jugada B:} Podría ganar en 3 turnos, pero solo si el oponente comete un error específico.
+		            Si el oponente juega óptimamente, esta jugada lleva a empate.
+	      \end{itemize}
+
+	      Minimax \textit{siempre} elegirá la Jugada A. Desde su perspectiva, la Jugada B es arriesgada porque ``asume''
+	      que el oponente jugará perfectamente y evitará la trampa, resultando en un empate. Minimax no puede ``apostar''
+	      a que el oponente cometa errores porque eso violaría su principio de minimizar la pérdida máxima.
+
+	      En la práctica, esto significa que un agente Minimax puede parecer ``poco ambicioso'' contra jugadores débiles.
+	      Ganará eventualmente (si tiene ventaja), pero no explotará las oportunidades de victoria rápida que un humano
+	      experto sí aprovecharía. Básicamente, Minimax juega como si estuviese en un torneo de campeonato mundial contra
+	      el mejor jugador posible, incluso cuando su oponente es un principiante que comete errores evidentes.
+
+	\item \textit{Proponga una modificación conceptual pequeña al algoritmo para que pueda explotar los errores
+		      de un oponente sub-óptimo.}
+
+
+\end{itemize}
+
+\end{document}
