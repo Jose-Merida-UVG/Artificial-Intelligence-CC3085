@@ -1,0 +1,101 @@
+\documentclass[11pt]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{pgfplots}
+
+\usetikzlibrary{arrows.meta}
+\pgfplotsset{compat=1.18}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  columns=flexible,
+  keepspaces=true,
+  commentstyle=\color{gray}\itshape,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  stringstyle=\color{green!40!black},
+  frame=L,
+  xleftmargin=2em,
+  showstringspaces=false,
+  tabsize=4
+}
+
+\title{\textbf{Laboratorio 8: Satisfacion \& Search} \vspace{1em}\\
+  Inteligencia Artificial - CC3085}
+\author{José Antonio Mérida Castejón}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Task 1 - Teoría}
+\textit{Responda las siguientes preguntas de forma clara, concisa y argumentada. No basta con definir: se espera que usted
+conecte el concepto con sus implicaciones prácticas o estratégicas.}
+
+\begin{enumerate}
+  \item \textit{En clase discutimos dos heurísticas vitales: MCV (Variable más Restringida) y LCV (Valor Menos Restringido). Explique con
+    sus propias palabras por qué la heurística MCV busca que el algoritmo ``falle lo más rápido posible'', mientras que la heurística
+  LCV busca que el algoritmo ``tenga éxito lo más rápido posible''. ¿Por qué esta combinación es tan poderosa en un árbol de Backtracking?}
+
+    \vspace{0.5em}
+
+Uno de los mayores defectos del algoritmo ``clásico'' de \textit{Backtracking} es el tener que 
+retroceder luego de recorrer una alta profundidad. La heurística \textit{MCV} nos ayuda a poder 
+podar las ramas dónde es poco probable tener éxito y únicamente debemos de explorar un número 
+limitado de variables. Por ejemplo, si dentro de un árbol sabemos que una rama 
+tiene únicamente 2 caminos posibles tenemos una búsqueda relativamente pequeña, dónde es más 
+probable que fallemos en profundidades tempranas en comparación a explorar una rama con 50 caminos posibles.
+
+Sin embargo, encontrar el error rápido no es suficiente por sí solo. La heurística \textit{LCV} 
+complementa a \textit{MCV} eligiendo, para cada variable, el valor que menos restringe a las 
+variables vecinas. Así, cuando sí existe una solución, el algoritmo tiene más probabilidad de 
+encontrarla sin necesidad de retroceder. Mientras \textit{MCV} busca fallar rápido para podar 
+ramas inútiles, \textit{LCV} busca tener éxito rápido preservando la mayor cantidad de opciones 
+posibles. La combinación de ambas heurísticas es lo que hace al \textit{Backtracking} eficiente 
+en la práctica.
+
+  \item \textit{Suponga que está diseñando un CSP para asignar turnos a médicos en un hospital. Tiene una restricción que dice:
+    ``El Dr. Pérez y la Dra. Gómez no pueden trabajar en el mismo turno, a menos que sea fin de semana''}
+
+    \begin{itemize}
+      \item \textit{¿Cómo modelaría esto utilizando la notación de Factores vista en clase? Defina cuáles serían las variables,
+        sus dominios y escriba lógicamente la condición que hace que el factor devuelva 0 o 1}
+    \end{itemize}
+
+      \item[] \textbf{Variables y dominios:}
+      \begin{itemize}
+        \item $X_P \in \{\text{mañana},\ \text{tarde},\ \text{noche},\ \text{libre}\}$: turno asignado al Dr. Pérez.
+        \item $X_G \in \{\text{mañana},\ \text{tarde},\ \text{noche},\ \text{libre}\}$: turno asignado a la Dra. Gómez.
+        \item $D \in \{\text{semana},\ \text{fin de semana}\}$: indica el tipo de día.
+      \end{itemize}
+
+      \vspace{0.5em}
+      \textbf{Factor:}
+      \[
+        f(X_P,\ X_G,\ D) =
+        \begin{cases}
+          1 & \text{si } D = \text{fin de semana} \\
+          1 & \text{si } D = \text{semana} \land X_P \neq X_G \\
+          0 & \text{si } D = \text{semana} \land X_P = X_G
+        \end{cases}
+      \]
+
+      Es decir, el factor devuelve $0$ únicamente cuando es día de semana y ambos médicos
+      tienen asignado el mismo turno, violando la restricción.
+    \end{itemize}
+
+\end{enumerate}
+
+
+\end{document}
