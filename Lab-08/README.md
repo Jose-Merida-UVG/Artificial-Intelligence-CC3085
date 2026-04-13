@@ -2,7 +2,13 @@
 
 ## Summary
 
-This assignment explores Constraint Satisfaction Problems (CSPs) through the modeling and solving of a microservice-to-server allocation problem. Eight microservices must be distributed across three physical servers subject to anti-affinity and capacity constraints.
+This assignment explores Constraint Satisfaction Problems (CSPs) through both theoretical analysis and practical implementation of a microservice-to-server allocation problem.
+
+- **MCV & LCV Heuristics**: Analysis of why MCV (Most Constrained Variable) forces early failures by targeting variables with the fewest remaining options, while LCV (Least Constraining Value) maximizes success by preserving neighbors' flexibility. The two operate at different levels — variable selection vs. value selection — and together make Backtracking efficient in practice.
+
+- **CSP Factor Modeling**: Design of a conditional anti-affinity factor for hospital shift scheduling (Dr. Perez and Dr. Gomez cannot share weekday shifts but may share weekend shifts), formalized with variables per doctor-day pair, shift domains, and a piecewise factor function.
+
+- **Backtracking vs. Local Search**: Comparative analysis applied to a videogame matchmaking scenario with millions of users, arguing that ICM's real-time "good enough" solutions outweigh Backtracking's optimal but computationally infeasible guarantees at scale.
 
 - **CSP Formulation**: Formal modeling of the allocation as a CSP triple $(\mathcal{X}, \mathcal{D}, \mathcal{F})$ with 8 variables (microservices), shared domain $\{S_1, S_2, S_3\}$, binary anti-affinity factors for pairs $(M_1,M_2)$, $(M_3,M_4)$, $(M_5,M_6)$, $(M_1,M_5)$, and a global capacity factor limiting each server to at most 3 microservices.
 
