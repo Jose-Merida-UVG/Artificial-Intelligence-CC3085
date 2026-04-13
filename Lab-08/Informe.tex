@@ -40,62 +40,101 @@
 \maketitle
 
 \subsection*{Task 1 - Teoría}
-\textit{Responda las siguientes preguntas de forma clara, concisa y argumentada. No basta con definir: se espera que usted
-conecte el concepto con sus implicaciones prácticas o estratégicas.}
+\textit{Responda las siguientes preguntas de forma clara, concisa y argumentada. No basta con
+definir: se espera que usted conecte el concepto con sus implicaciones prácticas o estratégicas.}
 
 \begin{enumerate}
-  \item \textit{En clase discutimos dos heurísticas vitales: MCV (Variable más Restringida) y LCV (Valor Menos Restringido). Explique con
-    sus propias palabras por qué la heurística MCV busca que el algoritmo ``falle lo más rápido posible'', mientras que la heurística
-  LCV busca que el algoritmo ``tenga éxito lo más rápido posible''. ¿Por qué esta combinación es tan poderosa en un árbol de Backtracking?}
 
-    \vspace{0.5em}
+  \item \textit{En clase discutimos dos heurísticas vitales: MCV (Variable más Restringida) y LCV
+    (Valor Menos Restringido). Explique con sus propias palabras por qué la heurística MCV busca
+    que el algoritmo ``falle lo más rápido posible'', mientras que la heurística LCV busca que el
+    algoritmo ``tenga éxito lo más rápido posible''. ¿Por qué esta combinación es tan poderosa en
+    un árbol de Backtracking?}
 
-Uno de los mayores defectos del algoritmo ``clásico'' de \textit{Backtracking} es el tener que 
-retroceder luego de recorrer una alta profundidad. La heurística \textit{MCV} nos ayuda a poder 
-podar las ramas dónde es poco probable tener éxito y únicamente debemos de explorar un número 
-limitado de variables. Por ejemplo, si dentro de un árbol sabemos que una rama 
-tiene únicamente 2 caminos posibles tenemos una búsqueda relativamente pequeña, dónde es más 
-probable que fallemos en profundidades tempranas en comparación a explorar una rama con 50 caminos posibles.
+  \vspace{0.5em}
 
-Sin embargo, encontrar el error rápido no es suficiente por sí solo. La heurística \textit{LCV} 
-complementa a \textit{MCV} eligiendo, para cada variable, el valor que menos restringe a las 
-variables vecinas. Así, cuando sí existe una solución, el algoritmo tiene más probabilidad de 
-encontrarla sin necesidad de retroceder. Mientras \textit{MCV} busca fallar rápido para podar 
-ramas inútiles, \textit{LCV} busca tener éxito rápido preservando la mayor cantidad de opciones 
-posibles. La combinación de ambas heurísticas es lo que hace al \textit{Backtracking} eficiente 
-en la práctica.
+  Uno de los mayores defectos del algoritmo ``clásico'' de \textit{Backtracking} es el tener que
+  retroceder luego de recorrer una alta profundidad. La heurística \textit{MCV} nos ayuda a poder
+  podar las ramas dónde es poco probable tener éxito y únicamente debemos de explorar un número
+  limitado de variables. Por ejemplo, si dentro de un árbol sabemos que una rama tiene únicamente
+  2 caminos posibles, tenemos una búsqueda relativamente pequeña dónde es más probable que fallemos
+  en profundidades tempranas, en comparación a explorar una rama con 50 caminos posibles.
 
-  \item \textit{Suponga que está diseñando un CSP para asignar turnos a médicos en un hospital. Tiene una restricción que dice:
-    ``El Dr. Pérez y la Dra. Gómez no pueden trabajar en el mismo turno, a menos que sea fin de semana''}
+  Sin embargo, encontrar el error rápido no es suficiente por sí solo. La heurística \textit{LCV}
+  complementa a \textit{MCV}, eligiendo para cada variable el valor que menos restringe a las
+  variables vecinas. Así, cuando sí existe una solución, el algoritmo tiene más probabilidad de
+  encontrarla sin necesidad de retroceder. Mientras \textit{MCV} busca fallar rápido para podar
+  ramas inútiles, \textit{LCV} busca tener éxito rápido preservando la mayor cantidad de opciones
+  posibles. La combinación de ambas heurísticas es lo que hace que \textit{Backtracking} sea
+  eficiente en la práctica.
 
+  Ambas heurísticas pueden sonar como opuestos, pero de hecho se complementan. Con \textit{LCV}
+  buscamos \textit{evitar} las restricciones, eligiendo valores que dejen la mayor libertad posible
+  a las variables vecinas. Con \textit{MCV} en cambio, buscamos las restricciones, eligiendo
+  primero las variables que menos opciones tienen. La clave está en que \textit{MCV} decide
+  \textit{qué variable} explorar primero, mientras que \textit{LCV} decide \textit{qué valor}
+  asignarle. Juntas, primero nos dirigimos hacia donde el espacio de búsqueda es más estrecho, y
+  una vez ahí, asignamos el valor que menos daño hace al resto. No son opuestos, sino que operan
+  en niveles distintos del algoritmo y se potencian mutuamente.
+
+  \item \textit{Suponga que está diseñando un CSP para asignar turnos a médicos en un hospital.
+    Tiene una restricción que dice: ``El Dr. Pérez y la Dra. Gómez no pueden trabajar en el mismo
+    turno, a menos que sea fin de semana''}
     \begin{itemize}
-      \item \textit{¿Cómo modelaría esto utilizando la notación de Factores vista en clase? Defina cuáles serían las variables,
-        sus dominios y escriba lógicamente la condición que hace que el factor devuelva 0 o 1}
+      \item \textit{¿Cómo modelaría esto utilizando la notación de Factores vista en clase? Defina
+        cuáles serían las variables, sus dominios y escriba lógicamente la condición que hace que
+        el factor devuelva 0 o 1}
     \end{itemize}
 
-      \item[] \textbf{Variables y dominios:}
-      \begin{itemize}
-        \item $X_P \in \{\text{mañana},\ \text{tarde},\ \text{noche},\ \text{libre}\}$: turno asignado al Dr. Pérez.
-        \item $X_G \in \{\text{mañana},\ \text{tarde},\ \text{noche},\ \text{libre}\}$: turno asignado a la Dra. Gómez.
-        \item $D \in \{\text{semana},\ \text{fin de semana}\}$: indica el tipo de día.
-      \end{itemize}
+  \vspace{0.5em}
+  \textbf{Variables y Dominios:}
+  \begin{itemize}
+    \item $X_{P,d}$ para cada $d \in \{\text{lunes},\ \text{martes},\ \text{miércoles},\
+      \text{jueves},\ \text{viernes},\ \text{sábado},\ \text{domingo}\}$: turno asignado al
+      Dr. Pérez el día $d$.
+    \item $X_{G,d}$ para cada $d \in \{\text{lunes},\ \text{martes},\ \text{miércoles},\
+      \text{jueves},\ \text{viernes},\ \text{sábado},\ \text{domingo}\}$: turno asignado a la
+      Dra. Gómez el día $d$.
+    \item Dominio de cada variable: $\{\text{mañana},\ \text{tarde},\ \text{noche},\ \text{libre}\}$
+  \end{itemize}
 
-      \vspace{0.5em}
-      \textbf{Factor:}
-      \[
-        f(X_P,\ X_G,\ D) =
-        \begin{cases}
-          1 & \text{si } D = \text{fin de semana} \\
-          1 & \text{si } D = \text{semana} \land X_P \neq X_G \\
-          0 & \text{si } D = \text{semana} \land X_P = X_G
-        \end{cases}
-      \]
+  \vspace{0.5em}
+  \textbf{Factor:}
+  \[
+    f(X_{P,d},\ X_{G,d}) =
+    \begin{cases}
+      1 & \text{si } d \in \{\text{sábado},\ \text{domingo}\} \\
+      1 & \text{si } d \notin \{\text{sábado},\ \text{domingo}\} \text{ y } X_{P,d} \neq X_{G,d} \\
+      0 & \text{si } d \notin \{\text{sábado},\ \text{domingo}\} \text{ y } X_{P,d} = X_{G,d}
+    \end{cases}
+  \]
 
-      Es decir, el factor devuelve $0$ únicamente cuando es día de semana y ambos médicos
-      tienen asignado el mismo turno, violando la restricción.
-    \end{itemize}
+  Es decir, el factor devuelve $0$ únicamente cuando el día es de lunes a viernes y ambos médicos
+  tienen asignado el mismo turno, violando la restricción.
+
+  \item \textit{Contraste Backtracking Search con Local Search (ICM). Si usted está diseñando el
+    sistema de emparejamiento (\textit{matchmaking}) para un videojuego con millones de usuarios
+    en línea, ¿cuál de los dos algoritmos elegiría y por qué estaría dispuesto a sacrificar la
+    ``optimalidad exacta''?}
+
+  \vspace{0.5em}
+
+  Para un sistema de \textit{matchmaking} con millones de usuarios en línea, la elección clara es
+  \textit{Local Search} (ICM). \textit{Backtracking Search} garantiza encontrar una solución
+  óptima, pero su costo computacional escala muy mal con el tamaño del problema. Con millones de
+  jugadores simultáneos, encontrar el emparejamiento perfecto tomaría un tiempo poco aceptable.
+  \textit{Local Search} en cambio parte de una solución existente y la mejora iterativamente, lo
+  que lo hace extremadamente escalable y capaz de devolver una solución suficientemente buena en
+  tiempo real.
+
+  La optimalidad exacta tampoco es un requisito crítico en este contexto. Un jugador no necesita
+  la partida perfectamente balanceada, necesita entrar rápido y tener una experiencia divertida.
+  Sacrificar algo de \textit{fairness} es aceptable porque los propios juegos tienen sistemas
+  secundarios que compensan los desequilibrios, como ajustes de \textit{ELO} post-partida que
+  corrigen a largo plazo lo que el \textit{matchmaking} no pudo garantizar a corto plazo. La
+  solución suficientemente buena de ICM, entregada en milisegundos, supera en valor práctico a
+  la solución óptima que llegaría demasiado tarde.
 
 \end{enumerate}
-
 
 \end{document}
