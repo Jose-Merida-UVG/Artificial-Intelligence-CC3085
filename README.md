@@ -24,6 +24,8 @@ This repository hosts the academic assignments and projects for the **Artificial
 | **Lab-03** | Naive Bayes, SVM & Decision Trees | [View Folder](./Lab-03/) | From-scratch Bayesian spam filter on real SMS data, SVM and Decision Tree classifiers applied to League of Legends match data, with theoretical discussion on independence assumptions and greedy myopia. |
 | **Lab-04** | SGD & Neural Networks | [View Folder](./Lab-04/) | From-scratch Batch GD, SGD, and Mini-Batch GD on a noisy polynomial, Perceptron classifier on Iris, and theoretical analysis of vanishing gradients and depth vs. width. |
 | **Lab-05** | Reinforcement Learning | [View Folder](./Lab-05/) | Q-Learning on the stochastic FrozenLake-v1 environment (Gymnasium), with theoretical analysis of exploration/exploitation, SARSA vs. Q-Learning, and bootstrapping. |
+| **Lab-06** | Minimax & Adversarial Search | [View Folder](./Lab-06/) | Connect Four agent using Minimax with Alpha-Beta pruning (93.86% node reduction), custom heuristic evaluation, and an interactive Streamlit web app. |
+| **Lab-08** | Constraint Satisfaction Problems | [View Folder](./Lab-08/) | Microservice-to-server allocation modeled as a CSP, solved with Backtracking, MRV + Forward Checking, Beam Search, and ICM local search, with comparative analysis. |
 
 ### Hojas de Trabajo
 
