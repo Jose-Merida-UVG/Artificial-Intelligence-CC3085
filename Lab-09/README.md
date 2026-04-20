@@ -28,9 +28,9 @@ This assignment explores probabilistic graphical models through theoretical anal
 
 | Query | Result | Interpretation |
 | :--- | :------ | :---------- |
-| $P(A=1)$ | 0.0199 | Prior probability that alarm sounds (robo OR earthquake) |
-| $P(B=1 \mid A=1)$ | 0.5025 | After alarm triggers, robo and earthquake are equally likely |
-| $P(B=1 \mid A=1, E=1)$ | 0.0100 | Confirming earthquake "explains away" the alarm; robo probability collapses to prior |
+| $P(A=1)$ | 0.0199 | Prior probability that alarm sounds (burglary OR earthquake) |
+| $P(B=1 \mid A=1)$ | 0.5025 | After alarm triggers, burglary and earthquake are equally likely |
+| $P(B=1 \mid A=1, E=1)$ | 0.0100 | Confirming earthquake "explains away" the alarm; burglary probability collapses to prior |
 
 The Explain Away effect shows how causal knowledge restructures probability: confirming one cause decreases the posterior of independent alternative causes, despite those causes being marginally independent before observing the effect.
 
