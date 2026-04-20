@@ -50,53 +50,78 @@ definir: se espera que usted conecte el concepto con sus implicaciones práctica
     y una variable de ``Causa'' (A). Adicionalmente, explique por qué, desde el punto de vista del modelado de datos, suele ser más
     fácil estimar en producción $P(Evidencia | Causa)$ que $P(Causa | Evidencia)$}
 
+  Definimos la variable de \textbf{Causa} $A$ como la ocurrencia de fraude, y la variable de 
+  \textbf{Evidencia Observable} $B$ como una transacción inusual (monto atípico, ubicación 
+  extranjera, horario irregular, etc.).
+
+  Desde el punto de vista del modelado, estimar $P(B \mid A)$ es directo. Aquí basta con observar 
+  los casos históricos etiquetados como fraude y medir con qué frecuencia presentan cada patrón 
+  de evidencia. En cambio, estimar $P(A \mid B)$ directamente es difícil, ya que el fraude es 
+  un evento raro. La tasa de fraude $P(A)$ es muy pequeña, dado que la mayoría de transacciones son
+  legítimas a pesar que estas puedan ser \textit{inusuales}.
+
+  En otras palabras, para calcular $P(B \mid A)$ únicamente debemos indagar sobre los casos donde
+  se presenta fraude mientras que para calcular $P(A \mid B)$ debemos indagar sobre todos los casos
+  dónde se categoriza una transacción como inusual.
+
+  La regla de Bayes permite invertir la dirección del razonamiento, convirtiendo el razonamiento 
+  causal $P(B \mid A)$ en diagnóstico $P(A \mid B)$:
+
+  $$P(A \mid B) = \frac{P(B \mid A) \cdot P(A)}{P(B)}$$
+
+  Así, en producción se estima la dirección fácil $P(B \mid A)$ a partir de datos históricos, 
+  se incorpora el prior $P(A)$ como la tasa base de fraude, y se obtiene la probabilidad 
+  diagnóstica $P(A \mid B)$ que el sistema realmente necesita.
+
 
   \item \textit{Basado en lo que aprendió en clase, compare las Redes de Markov con las Redes Bayesianas. En los siguientes escenarios,
     recuerde que debe indicar y justificar qué tipo de red (Markov o Bayesiana) utilizaría para cada escenario:}
 
-    \begin{enumerate}
-      \item\textit{Necesita modelar un sistema de segmentación de imágenes médicas donde el estado de un píxel (tejido sano) o tumor
-        depende fuertemente del estado de sus píxeles vecinos de forma simétrica.}
+\begin{enumerate}
+  \item \textit{Necesita modelar un sistema de segmentación de imágenes médicas donde el estado de un
+  píxel (tejido sano o tumor) depende fuertemente del estado de sus píxeles vecinos de forma
+  simétrica.}
+  
+  En este escenario, la relación entre píxeles vecinos es simétrica:
+  ningún píxel ``causa'' el estado de otro, simplemente se influyen mutuamente. 
+  Una \textbf{Red de Markov} es la elección adecuada, donde se define una función 
+  entre cada par de píxeles vecinos que asigna mayor probabilidad a 
+  configuraciones donde los vecinos comparten la misma etiqueta (sano/tumor), penalizando 
+  las asignaciones donde no concuerdan.
 
-        En este caso, logramos identificar claramente la necesidad de incluir probabilidades causales de nuestro modelo. Según el enunciado,
-        la probabilidad del estado de un píxel se ve sesgada (o causada por) el estado de los píxeles anteriores. En este caso, una Red de
-        Markov no sería suficiente para captar la información que necesitamos.
+  \item \textit{Necesita modelar un sistema de diagnóstico de fallas en el motor de un vehículo, donde
+  ciertas piezas al romperse provocan lecturas anómalas en los sensores.}
+  
+  En este escenario, existe una dirección causal: una pieza rota 
+  \textit{provoca} lecturas anómalas en los sensores. Una \textbf{Red Bayesiana} 
+  es la elección correcta, donde las fallas actúan como variables no observables 
+  y las lecturas de los sensores como evidencia observable:
 
-      \item\textit{Necesita modelar un sistema de diagnóstico de fallas en el motor de un vehículo, donde ciertas piezas al romperse
-        provocan lecturas anómalas en los sensores.}
+  $$P(\text{fallas}, \text{sensores}) = P(\text{fallas}) \cdot P(\text{sensores} \mid \text{fallas})$$
 
-        En este caso, no tenemos probabilidades causales si no que probabilidades de diferentes estados del sistema dados diferentes
-        factores. Este es un caso clásico dónde podemos aplicar Redes de Markov.
-    \end{enumerate}
+  $P(\text{fallas})$ se estima como la tasa histórica de fallas de cada pieza, y 
+  $P(\text{sensores} \mid \text{fallas})$ es fácil de estimar. Únicamente debemos observar priors, sabiendo
+  que pieza esta rota podemos medir las lecturas de los sensores. Aplicando la regla de Bayes obtenemos 
+  lo que el sistema realmente necesita. Dado lo que leen los sensores, ¿qué pieza está rota?
+  $$P(\text{fallas} \mid \text{sensores}) = \frac{P(\text{sensores} \mid \text{fallas}) \cdot P(\text{fallas})}{P(\text{sensores})}$$
+\end{enumerate}
 
-  En una Red de Markov con $n = 50$ variables booleanas, cada variable puede tomar valores en 
-$\{0, 1\}$, por lo que el número total de combinaciones posibles es $2^{50}$
-(más de un cuadrillón de asignaciones). La constante de normalización 
- recorre \textit{todas} las asignaciones 
-posibles del espacio conjunto, lo que exige evaluar explícitamente cada una de esas $2^{50}$ 
-combinaciones. Esto representa un desafío computacional prohibitivo en la industria por tres razones 
-fundamentales: 
+\item \textit{En las Redes de Markov, la probabilidad conjunta requiere calcular la constante de 
+normalización $Z$. Si su red de Markov tiene 50 variables booleanas (0 o 1), ¿cuántas combinaciones 
+posibles de asignaciones deben evaluarse para calcular el valor exacto de $Z$? ¿Por qué esto representa 
+un desafío computacional prohibitivo en la industria y qué algoritmos utilizamos para evadir este 
+cálculo exacto?}
 
-\begin{itemize}
+Con 50 variables booleanas, el espacio de asignaciones posibles es $2^{50} \approx 10^{15}$ 
+combinaciones. Si evaluáramos una combinación por nanosegundo, el cálculo exacto de $Z$ 
+tomaría aproximadamente 11 días continuos. En redes reales con cientos o miles 
+de variables, esto escala a tiempos muy altos. Esto resulta en que el cálculo exacto sea completamente inviable.
 
-  \item El crecimiento es \textbf{exponencial en $\mathbf n$}, de modo que agregar una sola variable 
-adicional \textit{duplica} el costo de cómputo, haciendo inviable el escalamiento a redes reales con 
-cientos o miles de variables; 
+Para evadir este cálculo exacto se recurre a métodos aproximados. Los algoritmos de 
+\textit{Markov Chain Monte Carlo (MCMC)}, como \textit{Muestreo de Gibbs}, estiman la 
+distribución muestreando el espacio de estados sin necesidad de enumerar todas las 
+combinaciones.
 
-
-  \item En aplicaciones industriales como modelado de lenguaje, visión por 
-computadora o sistemas de recomendación, los grafos tienen estructuras densas donde la factorización 
-no reduce suficientemente el espacio de búsqueda para que el cálculo exacto sea tratable en tiempo 
-real. 
-
-\item Los recursos de memoria y tiempo de procesamiento requeridos superan con creces la 
-capacidad del hardware disponible, incluso en clústeres de alto rendimiento. Para evadir este cálculo 
-exacto, se emplean dos familias de algoritmos aproximados: los \textbf{métodos de muestreo de Monte 
-Carlo mediante cadenas de Markov (MCMC)}, como el \textit{Gibbs Sampling}, que generan muestras 
-de la distribución conjunta sin necesidad de conocer $Z$ al explorar el espacio de estados de forma 
-estocástica.
-
-\end{itemize}
 
 \end{enumerate}
 
