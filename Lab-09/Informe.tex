@@ -1,0 +1,103 @@
+\documentclass[11pt]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{pgfplots}
+
+\usetikzlibrary{arrows.meta}
+\pgfplotsset{compat=1.18}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  columns=flexible,
+  keepspaces=true,
+  commentstyle=\color{gray}\itshape,
+  keywordstyle=\color{blue!70!black}\bfseries,
+  stringstyle=\color{green!40!black},
+  frame=L,
+  xleftmargin=2em,
+  showstringspaces=false,
+  tabsize=4
+}
+
+\title{\textbf{Laboratorio 9: Redes Bayesianas \& Redes de Markov} \vspace{1em}\\
+  Inteligencia Artificial - CC3085}
+\author{José Antonio Mérida Castejón}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Task 1 - Teoría}
+\textit{Responda las siguientes preguntas de forma clara, concisa y argumentada. No basta con
+definir: se espera que usted conecte el concepto con sus implicaciones prácticas o estratégicas.}
+
+\begin{enumerate}
+
+  \item \textit{En clase discutimos cómo la regla de Bayes convierte un razonamieno de diagnóstico en uno causal. Con ello considere
+    que usted diseña un sistema de IA para detectar fraudes en tarjetas de crédito. Defina una variable ``Evidencia Observable'' (B)
+    y una variable de ``Causa'' (A). Adicionalmente, explique por qué, desde el punto de vista del modelado de datos, suele ser más
+    fácil estimar en producción $P(Evidencia | Causa)$ que $P(Causa | Evidencia)$}
+
+
+  \item \textit{Basado en lo que aprendió en clase, compare las Redes de Markov con las Redes Bayesianas. En los siguientes escenarios,
+    recuerde que debe indicar y justificar qué tipo de red (Markov o Bayesiana) utilizaría para cada escenario:}
+
+    \begin{enumerate}
+      \item\textit{Necesita modelar un sistema de segmentación de imágenes médicas donde el estado de un píxel (tejido sano) o tumor
+        depende fuertemente del estado de sus píxeles vecinos de forma simétrica.}
+
+        En este caso, logramos identificar claramente la necesidad de incluir probabilidades causales de nuestro modelo. Según el enunciado,
+        la probabilidad del estado de un píxel se ve sesgada (o causada por) el estado de los píxeles anteriores. En este caso, una Red de
+        Markov no sería suficiente para captar la información que necesitamos.
+
+      \item\textit{Necesita modelar un sistema de diagnóstico de fallas en el motor de un vehículo, donde ciertas piezas al romperse
+        provocan lecturas anómalas en los sensores.}
+
+        En este caso, no tenemos probabilidades causales si no que probabilidades de diferentes estados del sistema dados diferentes
+        factores. Este es un caso clásico dónde podemos aplicar Redes de Markov.
+    \end{enumerate}
+
+  En una Red de Markov con $n = 50$ variables booleanas, cada variable puede tomar valores en 
+$\{0, 1\}$, por lo que el número total de combinaciones posibles es $2^{50}$
+(más de un cuadrillón de asignaciones). La constante de normalización 
+ recorre \textit{todas} las asignaciones 
+posibles del espacio conjunto, lo que exige evaluar explícitamente cada una de esas $2^{50}$ 
+combinaciones. Esto representa un desafío computacional prohibitivo en la industria por tres razones 
+fundamentales: 
+
+\begin{itemize}
+
+  \item El crecimiento es \textbf{exponencial en $\mathbf n$}, de modo que agregar una sola variable 
+adicional \textit{duplica} el costo de cómputo, haciendo inviable el escalamiento a redes reales con 
+cientos o miles de variables; 
+
+
+  \item En aplicaciones industriales como modelado de lenguaje, visión por 
+computadora o sistemas de recomendación, los grafos tienen estructuras densas donde la factorización 
+no reduce suficientemente el espacio de búsqueda para que el cálculo exacto sea tratable en tiempo 
+real. 
+
+\item Los recursos de memoria y tiempo de procesamiento requeridos superan con creces la 
+capacidad del hardware disponible, incluso en clústeres de alto rendimiento. Para evadir este cálculo 
+exacto, se emplean dos familias de algoritmos aproximados: los \textbf{métodos de muestreo de Monte 
+Carlo mediante cadenas de Markov (MCMC)}, como el \textit{Gibbs Sampling}, que generan muestras 
+de la distribución conjunta sin necesidad de conocer $Z$ al explorar el espacio de estados de forma 
+estocástica.
+
+\end{itemize}
+
+\end{enumerate}
+
+\end{document}
