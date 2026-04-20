@@ -26,6 +26,7 @@ This repository hosts the academic assignments and projects for the **Artificial
 | **Lab-05** | Reinforcement Learning | [View Folder](./Lab-05/) | Q-Learning on the stochastic FrozenLake-v1 environment (Gymnasium), with theoretical analysis of exploration/exploitation, SARSA vs. Q-Learning, and bootstrapping. |
 | **Lab-06** | Minimax & Adversarial Search | [View Folder](./Lab-06/) | Connect Four agent using Minimax with Alpha-Beta pruning (93.86% node reduction), custom heuristic evaluation, and an interactive Streamlit web app. |
 | **Lab-08** | Constraint Satisfaction Problems | [View Folder](./Lab-08/) | Microservice-to-server allocation modeled as a CSP, solved with Backtracking, MRV + Forward Checking, Beam Search, and ICM local search, with comparative analysis. |
+| **Lab-09** | Bayesian Networks & Markov Networks | [View Folder](./Lab-09/) | Exact inference by enumeration on a burglar-earthquake-alarm network, Bayes' Rule application to causal reasoning, and demonstration of the Explain Away effect with computational intractability analysis. |
 
 ### Hojas de Trabajo
 
